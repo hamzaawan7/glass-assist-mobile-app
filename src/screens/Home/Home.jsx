@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import styles from "./style";
 
-const Home = ({ navigation, setToken }) => {
+const Home = ({ navigation }) => {
   const theme = useTheme();
   const date = new Date(Date.now());
   const days = [
@@ -18,10 +18,10 @@ const Home = ({ navigation, setToken }) => {
     "Saturday",
     "Sunday",
   ];
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem("access_token");
-    await AsyncStorage.removeItem("user");
-    setToken(null);
+    navigation.navigate('Login');
   };
 
   return (
@@ -34,7 +34,9 @@ const Home = ({ navigation, setToken }) => {
           <Text style={styles.dateText}>{days[date.getDay() - 1]}</Text>
           <Text style={styles.dateText}>{date.toLocaleDateString()}</Text>
         </View>
+
         <Divider />
+
         <Text style={styles.jobText}>Total Jobs: 3 </Text>
         <Button onPress={handleLogout}>Logout</Button>
 
@@ -44,12 +46,14 @@ const Home = ({ navigation, setToken }) => {
           description="Name"
           right={() => <Text>9:00am</Text>}
         />
+
         <List.Item
           onPress={() => navigation.navigate("Tech")}
           title="Title"
           description="Name"
           right={() => <Text>9:00am</Text>}
         />
+
         <List.Item
           onPress={() => navigation.navigate("Tech")}
           title="Title"
