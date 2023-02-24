@@ -1,13 +1,20 @@
-import React from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+
 import { Button, Divider, List, Text, useTheme } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-root-toast";
 
 import styles from "./style";
 
+import instance from "../../api/axios";
+
 const Home = ({ navigation }) => {
   const theme = useTheme();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const date = new Date(Date.now());
   const days = [
     "Monday",
@@ -19,8 +26,42 @@ const Home = ({ navigation }) => {
     "Sunday",
   ];
 
+  useEffect(() => {
+    setIsLoading(true);
+    (async () => {
+      try {
+        const res = await instance.get(`/api/bookings`);
+
+        const { data, success } = res.data;
+
+        if (success) {
+          console.log(data);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error.response?.data);
+
+        const { message } = error.response?.data;
+
+        setIsLoading(false);
+        Toast.show(message ? message : 'Something went wrong.', {
+          duration: Toast.durations.LONG,
+        });
+      }
+    })();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>
+    );
+  }
+
+
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("access_token");
+    await AsyncStorage.clear();
     navigation.navigate('Login');
   };
 

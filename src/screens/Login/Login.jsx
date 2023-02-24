@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 
 import { Button, TextInput } from "react-native-paper";
-import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import styles from "./style";
 
+import instance from "../../api/axios";
+
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsLoading(true);
     (async () => {
       try {
@@ -30,7 +31,7 @@ const Login = ({ navigation }) => {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }, [navigation]);
 
   if (isLoading) {
     return (
@@ -43,12 +44,14 @@ const Login = ({ navigation }) => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post(`http://10.0.2.2:8000/api/login`, {
+      const res = await instance.post(`/api/login`, {
         email,
         password,
       });
 
-      await AsyncStorage.setItem("access_token", JSON.stringify(res?.data?.data.token));
+      instance.defaults.headers.common['Authorization'] = 'Bearer ' + res?.data?.data.token;
+
+      await AsyncStorage.setItem("access_token", res?.data?.data.token);
       navigation.navigate('Home');
     } catch (error) {
       setIsLoading(false);
@@ -65,7 +68,8 @@ const Login = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => setEmail(text)}
+          value={email}
+          onChangeText={setEmail}
           label={"Username"}
           left={
             <TextInput.Icon
@@ -77,7 +81,8 @@ const Login = ({ navigation }) => {
         <TextInput
           style={styles.input}
           label={"Password"}
-          onChangeText={(text) => setPassword(text)}
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry
           left={
             <TextInput.Icon
