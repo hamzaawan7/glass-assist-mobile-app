@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import { TextInput, Text, Checkbox, Button, Divider } from "react-native-paper";
 import Datatable from "./Datatable";
@@ -6,14 +6,14 @@ import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from '../screens/Tech/style';
 
-const ReadOnlyForm = () => {
+const ReadOnlyForm = (booking) => {
   const [isChecked, setIsChecked] = useState("unchecked");
   const [date, setDate] = useState(new Date(Date.now()));
   const [open, setOpen] = useState(false);
 
   return (
     <View>
-      <Text style={styles.text}>Job Card 45597</Text>
+      <Text style={styles.text}>Job Card {booking.id}</Text>
       <View style={styles.picker}>
         <Picker label="Status">
           <Picker.Item label="Pending" value="pending" />

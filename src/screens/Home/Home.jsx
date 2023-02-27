@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 
 import { Button, Divider, List, Text, useTheme } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,6 +14,7 @@ const Home = ({ navigation }) => {
   const theme = useTheme();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [bookings, setBookings] = useState([]);
 
   const date = new Date(Date.now());
   const days = [
@@ -30,16 +31,27 @@ const Home = ({ navigation }) => {
     setIsLoading(true);
     (async () => {
       try {
-        const res = await instance.get(`/api/bookings`);
+        const token = await AsyncStorage.getItem("access_token");
 
-        const { data, success } = res.data;
+        if (token) {
+          instance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
-        if (success) {
-          console.log(data);
+          const res = await instance.get(`/api/bookings`);
+          const { data, success } = res.data;
+
+          if (success) {
+            setBookings(data);
+          }
+        } else {
+          Toast.show('Please login again...', {
+            duration: Toast.durations.LONG,
+          });
+          navigation.navigate('Login');
         }
+
         setIsLoading(false);
       } catch (error) {
-        console.log(error.response?.data);
+        console.error(error.response?.data);
 
         const { message } = error.response?.data;
 
@@ -50,6 +62,17 @@ const Home = ({ navigation }) => {
       }
     })();
   }, []);
+
+  function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
 
   if (isLoading) {
     return (
@@ -78,29 +101,32 @@ const Home = ({ navigation }) => {
 
         <Divider />
 
-        <Text style={styles.jobText}>Total Jobs: 3 </Text>
+        <Text style={styles.jobText}>Total Jobs: {bookings.length}</Text>
         <Button onPress={handleLogout}>Logout</Button>
 
-        <List.Item
-          onPress={() => navigation.navigate("Tech")}
-          title="Title"
-          description="Name"
-          right={() => <Text>9:00am</Text>}
+        <FlatList
+          data={bookings}
+          keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={() => <Divider />}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No jobs for today...</Text>
+            </View>
+          )}
+          renderItem={({ item }) => (
+            <List.Item
+              onPress={() => navigation.navigate("Tech", {
+                id: item.id
+              })}
+              title={item?.customer?.first_name + ' ' + item?.customer?.surname}
+              description={item.calendar}
+              right={() => <Text>
+                {formatAMPM(new Date(item?.datetime.replace(/-/g, "/")))}
+              </Text>}
+            />
+          )}
         />
 
-        <List.Item
-          onPress={() => navigation.navigate("Tech")}
-          title="Title"
-          description="Name"
-          right={() => <Text>9:00am</Text>}
-        />
-
-        <List.Item
-          onPress={() => navigation.navigate("Tech")}
-          title="Title"
-          description="Name"
-          right={() => <Text>9:00am</Text>}
-        />
       </View>
     </SafeAreaView>
   );

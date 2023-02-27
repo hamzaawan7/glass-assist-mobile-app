@@ -14,23 +14,26 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSecure, setIsSecure] = useState(true);
 
   useLayoutEffect(() => {
-    setIsLoading(true);
-    (async () => {
+
+    const unsubscribe = navigation.addListener('focus', async () => {
+      setIsLoading(true);
       try {
         const token = await AsyncStorage.getItem("access_token");
 
+        setIsLoading(false);
         if (token) {
           navigation.navigate('Home');
         }
-
-        setIsLoading(false);
       } catch (error) {
         console.log(error);
         setIsLoading(false);
       }
-    })();
+    });
+
+    return unsubscribe;
   }, [navigation]);
 
   if (isLoading) {
@@ -49,10 +52,13 @@ const Login = ({ navigation }) => {
         password,
       });
 
-      instance.defaults.headers.common['Authorization'] = 'Bearer ' + res?.data?.data.token;
+      const { data, success } = res.data;
 
-      await AsyncStorage.setItem("access_token", res?.data?.data.token);
-      navigation.navigate('Home');
+      if (success) {
+        instance.defaults.headers.common['Authorization'] = 'Bearer ' + data?.token;
+        await AsyncStorage.setItem("access_token", data?.token);
+        navigation.navigate('Home');
+      }
     } catch (error) {
       setIsLoading(false);
       Toast.show(`${error?.response?.data.message}`, {
@@ -83,9 +89,10 @@ const Login = ({ navigation }) => {
           label={"Password"}
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          secureTextEntry={isSecure}
           left={
             <TextInput.Icon
+              onPress={() => setIsSecure(!isSecure)}
               icon={() => <Icon name="eye" color={"black"} size={20} />}
             />
           }

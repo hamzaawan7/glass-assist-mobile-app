@@ -4,6 +4,13 @@ import { StyleSheet } from "react-native";
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 10,
+        justifyContent: 'center'
+    },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10,
     },
     input: {
         backgroundColor: 'white',
@@ -11,7 +18,7 @@ export default styles = StyleSheet.create({
     },
     text: {
         fontSize: 20,
-        textAlign:'center',
+        textAlign: 'center',
         marginTop: 30,
         marginBottom: 30
     },
@@ -22,10 +29,10 @@ export default styles = StyleSheet.create({
         alignItems: 'center',
     },
     picker: {
-        backgroundColor:'white',
+        backgroundColor: 'white',
         borderBottomWidth: 1,
         borderBottomColor: 'lightgray',
-        paddingLeft:8,
+        paddingLeft: 8,
     },
     expBtn: {
         backgroundColor: 'white',
@@ -35,7 +42,7 @@ export default styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     note: {
-        padding:10,
+        padding: 10,
         paddingLeft: 16,
     },
     datatable: {

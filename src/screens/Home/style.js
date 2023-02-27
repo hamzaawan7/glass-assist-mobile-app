@@ -4,6 +4,13 @@ import { StyleSheet } from "react-native";
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 10,
+        justifyContent: 'center'
+    },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10,
     },
     header: {
         backgroundColor: 'black',
@@ -14,7 +21,7 @@ export default styles = StyleSheet.create({
         fontSize: 20,
     },
     dateContainer: {
-        alignSelf:'center',
+        alignSelf: 'center',
         marginTop: 5,
         padding: 20,
     },
@@ -26,5 +33,14 @@ export default styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 20,
         paddingLeft: 15,
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignSelf: 'center',
+    },
+    emptyText: {
+        fontWeight: '600',
+        fontSize: 20,
     }
 });
