@@ -15,6 +15,7 @@ export default styles = StyleSheet.create({
     input: {
         backgroundColor: 'white',
         borderBottomColor: 'lightgray',
+        marginVertical: 10,
     },
     text: {
         fontSize: 20,
@@ -33,6 +34,7 @@ export default styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: 'lightgray',
         paddingLeft: 8,
+        marginVertical: 10,
     },
     expBtn: {
         backgroundColor: 'white',
@@ -43,12 +45,9 @@ export default styles = StyleSheet.create({
     },
     note: {
         padding: 10,
-        paddingLeft: 16,
+        paddingLeft: 10,
     },
     datatable: {
         backgroundColor: 'white'
     }
-
-
-
 });

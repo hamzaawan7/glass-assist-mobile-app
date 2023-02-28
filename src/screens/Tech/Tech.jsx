@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
 
 import ReadOnlyForm from "../../Components/ReadOnlyForm";
+import WritableForm from "../../Components/WritableForm";
 
 import instance from "../../api/axios";
 
@@ -64,13 +65,9 @@ const Tech = ({ route }) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView>
-        <ReadOnlyForm {...booking} />
+        {/* <ReadOnlyForm {...booking} /> */}
 
-        <View>
-          <Text style={styles.text}>Pre Installation Check</Text>
-          <TextInput label={"Pre Installation Check-Notes"} style={styles.input} />
-        </View>
-
+        <WritableForm {...booking} />
       </ScrollView>
     </KeyboardAvoidingView>
   );
