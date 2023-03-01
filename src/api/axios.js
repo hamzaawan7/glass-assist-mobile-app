@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const instance = axios.create({
     baseURL: 'http://10.0.2.2:8000',
     withCredentials: true,
@@ -14,8 +12,6 @@ const instance = axios.create({
 
 // Request interceptor. Runs before your request reaches the server
 const onRequest = async (config) => {
-    const xsrf = await AsyncStorage.getItem('@app:session');
-
     // If http method is `post | put | delete` and XSRF-TOKEN cookie is 
     // not present, call '/sanctum/csrf-cookie' to set CSRF token, then 
     // proceed with the initial response
@@ -23,11 +19,8 @@ const onRequest = async (config) => {
         config.method == 'post' ||
         config.method == 'put' ||
         config.method == 'delete'
-    ) && !xsrf) {
-        setCSRFToken()
-            .then(async response => {
-                await AsyncStorage.setItem('@app:session', JSON.stringify(response));
-            });
+    )) {
+        await setCSRFToken();
     }
 
     return config;

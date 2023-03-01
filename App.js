@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import { ThemeProvider } from "react-native-paper";
 import { RootSiblingParent } from "react-native-root-siblings";
+import 'react-native-get-random-values'
 
 import Stack from "./src/navigation/Stack";
 
