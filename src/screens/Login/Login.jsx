@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 
 import { Button, TextInput } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "@expo/vector-icons/FontAwesome";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
