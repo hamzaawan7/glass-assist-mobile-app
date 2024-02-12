@@ -2,13 +2,14 @@ import React, { useState, useLayoutEffect } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 
 import { Button, TextInput } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "@expo/vector-icons/FontAwesome";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import styles from "./style";
 
 import instance from "../../api/axios";
+import logs from '../../utils/logs';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -17,13 +18,14 @@ const Login = ({ navigation }) => {
   const [isSecure, setIsSecure] = useState(true);
 
   useLayoutEffect(() => {
-
     const unsubscribe = navigation.addListener('focus', async () => {
       setIsLoading(true);
+
       try {
         const token = await AsyncStorage.getItem("access_token");
 
         setIsLoading(false);
+
         if (token) {
           navigation.navigate('Home');
         }
@@ -36,16 +38,9 @@ const Login = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-    );
-  }
-
   const handleSubmit = async () => {
     setIsLoading(true);
+
     try {
       const res = await instance.post(`/api/login`, {
         email,
@@ -60,12 +55,21 @@ const Login = ({ navigation }) => {
         navigation.navigate('Home');
       }
     } catch (error) {
+      logs.error(error);
       setIsLoading(false);
       Toast.show(`${error?.response?.data.message}`, {
         duration: Toast.durations.LONG,
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
