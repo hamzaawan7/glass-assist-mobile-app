@@ -17,13 +17,14 @@ const Login = ({ navigation }) => {
   const [isSecure, setIsSecure] = useState(true);
 
   useLayoutEffect(() => {
-
     const unsubscribe = navigation.addListener('focus', async () => {
       setIsLoading(true);
+
       try {
         const token = await AsyncStorage.getItem("access_token");
 
         setIsLoading(false);
+
         if (token) {
           navigation.navigate('Home');
         }
@@ -46,6 +47,7 @@ const Login = ({ navigation }) => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+
     try {
       const res = await instance.post(`/api/login`, {
         email,
