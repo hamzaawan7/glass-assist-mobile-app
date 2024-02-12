@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "./style";
 
 import instance from "../../api/axios";
+import logs from '../../utils/logs';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -37,14 +38,6 @@ const Login = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-    );
-  }
-
   const handleSubmit = async () => {
     setIsLoading(true);
 
@@ -62,12 +55,21 @@ const Login = ({ navigation }) => {
         navigation.navigate('Home');
       }
     } catch (error) {
+      logs.error(error);
       setIsLoading(false);
       Toast.show(`${error?.response?.data.message}`, {
         duration: Toast.durations.LONG,
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

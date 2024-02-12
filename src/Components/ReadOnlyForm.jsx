@@ -393,7 +393,6 @@ export default function (booking) {
         editable={false}
       />
 
-
       <Text style={styles.text}>Manual Contact Details</Text>
       <TextInput
         label={"Mobile Phone"}
