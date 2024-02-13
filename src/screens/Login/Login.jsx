@@ -1,10 +1,11 @@
 import React, { useState, useLayoutEffect } from "react";
-import { Text, View, ActivityIndicator } from "react-native";
+import { Text, View, ActivityIndicator, Alert } from "react-native";
 
 import { Button, TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/FontAwesome";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AxiosError } from "axios";
 
 import styles from "./style";
 
@@ -39,6 +40,20 @@ const Login = ({ navigation }) => {
   }, [navigation]);
 
   const handleSubmit = async () => {
+    if (!email) {
+      Toast.show('Username is required', {
+        textColor: 'red'
+      });
+      return;
+    }
+
+    if (!password) {
+      Toast.show('Password is required', {
+        textColor: 'red'
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -54,10 +69,21 @@ const Login = ({ navigation }) => {
         await AsyncStorage.setItem("access_token", data?.token);
         navigation.navigate('Home');
       }
-    } catch (error) {
-      logs.error(error);
+
       setIsLoading(false);
-      Toast.show(`${error?.response?.data.message}`, {
+    } catch (error) {
+      let message = '';
+
+      if (error instanceof AxiosError) {
+        message = error.response.data.message;
+      } else {
+        message = 'Unexpected error';
+      }
+
+      logs.error(message);
+
+      setIsLoading(false);
+      Toast.show(message, {
         duration: Toast.durations.LONG,
       });
     }
