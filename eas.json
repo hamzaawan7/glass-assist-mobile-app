@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 5.9.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "API_URI": "https://ms.glassassistuk.co.uk"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "API_URI": "https://ms.glassassistuk.co.uk"
+      }
+    },
+    "production": {
+      "env": {
+        "API_URI": "https://ms.glassassistuk.co.uk"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
