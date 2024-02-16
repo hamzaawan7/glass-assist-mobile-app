@@ -5,7 +5,7 @@ import { Button, Divider, List, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-root-toast";
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, AntDesign } from '@expo/vector-icons';
 
 import styles from "./style";
 
@@ -52,6 +52,7 @@ const Home = ({ navigation }) => {
           Toast.show('Please login again...', {
             duration: Toast.durations.LONG,
           });
+
           navigation.navigate('Login');
         }
 
@@ -86,6 +87,24 @@ const Home = ({ navigation }) => {
         <ActivityIndicator size="large" color="#00ff00" />
       </View>
     );
+  }
+
+  const getCarName = (vehicle) => {
+    let name = '';
+
+    if (vehicle?.car_make && vehicle?.car_make?.name) {
+      name += `${vehicle?.car_make?.name} `;
+    }
+
+    if (vehicle?.car_model && vehicle?.car_model?.name) {
+      name += `${vehicle?.car_model?.name} `;
+    }
+
+    if (vehicle?.vehicle && vehicle?.vehicle?.reg_no) {
+      name += `(${vehicle?.vehicle?.reg_no})`;
+    }
+
+    return name;
   }
 
   const handleLogout = async () => {
@@ -138,10 +157,8 @@ const Home = ({ navigation }) => {
                 )
               }}
               description={() => {
-                console.log(item?.vehicle)
-
                 return (
-                  <View>
+                  <View style={{ columnGap: 10 }}>
                     {item?.customer?.first_name ? (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <FontAwesome name="user" size={14} color="black" />
@@ -150,19 +167,19 @@ const Home = ({ navigation }) => {
                       </View>
                     ) : null}
 
-                    {item?.vehicle?.first_name ? (
+                    {(item?.car_make || item?.car_model) ? (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <AntDesign name="car" size={14} color="black" />
 
-                        <Text style={{ marginLeft: 5 }}>{item?.customer?.first_name + ' ' + item?.customer?.surname}</Text>
+                        <Text style={{ marginLeft: 5 }}>{getCarName(item)}</Text>
                       </View>
                     ) : null}
 
-                    {item?.vehicle?.first_name ? (
+                    {user ? (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <FontAwesome5 name="tools" size={14} color="black" />
 
-                        <Text style={{ marginLeft: 5 }}>{item?.customer?.first_name + ' ' + item?.customer?.surname}</Text>
+                        <Text style={{ marginLeft: 5 }}>{user?.first_name + ' ' + user?.surname}</Text>
                       </View>
                     ) : null}
                   </View>
