@@ -11,7 +11,7 @@ export default function Stack() {
   return (
     <Navigator initialRouteName='Login'>
       <Screen name="Login" options={{ headerShown: false }} component={Login} />
-      <Screen name="Home" component={Home} />
+      <Screen name="Home" component={Home} options={{ headerShown: false }} />
       <Screen
         name="Tech"
         component={Tech}

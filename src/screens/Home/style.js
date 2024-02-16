@@ -4,7 +4,6 @@ import { StyleSheet } from "react-native";
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
         justifyContent: 'center'
     },
     horizontal: {
@@ -22,11 +21,12 @@ export default styles = StyleSheet.create({
     },
     dateContainer: {
         alignSelf: 'center',
-        marginTop: 5,
         padding: 20,
     },
     dateText: {
-        fontSize: 20,
+        fontSize: 17,
+        marginTop: 10,
+        textAlign: 'center',
         fontWeight: 'bold',
     },
     jobText: {

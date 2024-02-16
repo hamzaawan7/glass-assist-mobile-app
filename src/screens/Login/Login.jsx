@@ -67,6 +67,11 @@ const Login = ({ navigation }) => {
       if (success) {
         instance.defaults.headers.common['Authorization'] = 'Bearer ' + data?.token;
         await AsyncStorage.setItem("access_token", data?.token);
+
+        if (data?.user) {
+          await AsyncStorage.setItem("user", JSON.stringify(data.user));
+        }
+
         navigation.navigate('Home');
       }
 

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
-import { Button, Divider, List, Text, useTheme } from "react-native-paper";
+import { Button, Divider, List, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-root-toast";
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 
 import styles from "./style";
 
 import instance from "../../api/axios";
 
 const Home = ({ navigation }) => {
-  const theme = useTheme();
-
   const [isLoading, setIsLoading] = useState(false);
   const [bookings, setBookings] = useState([]);
+  const [user, setUser] = useState();
 
   const date = new Date(Date.now());
   const days = [
@@ -29,9 +29,15 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     setIsLoading(true);
+
     (async () => {
       try {
         const token = await AsyncStorage.getItem("access_token");
+        const user = await AsyncStorage.getItem("user");
+
+        if (user) {
+          setUser(JSON.parse(user));
+        }
 
         if (token) {
           instance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
@@ -82,7 +88,6 @@ const Home = ({ navigation }) => {
     );
   }
 
-
   const handleLogout = async () => {
     await AsyncStorage.clear();
     navigation.navigate('Login');
@@ -90,44 +95,88 @@ const Home = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View >
-        {/* <View style={styles.header}>
-          <Text style={styles.headerText}>Name</Text>
-        </View> */}
-        <View style={styles.dateContainer}>
-          <Text style={styles.dateText}>{days[date.getDay() - 1]}</Text>
-          <Text style={styles.dateText}>{date.toLocaleDateString()}</Text>
-        </View>
+      <View style={styles.dateContainer}>
+        <Text style={styles.dateText}>
+          SHOWING APPOINTMENTS FOR {date.toLocaleDateString()}
+        </Text>
 
-        <Divider />
+        <Text style={styles.dateText}>{days[date.getDay() - 1]}</Text>
+      </View>
 
-        <Text style={styles.jobText}>Total Jobs: {bookings.length}</Text>
-        <Button onPress={handleLogout}>Logout</Button>
+      <Divider />
 
-        <FlatList
-          data={bookings}
-          keyExtractor={(item) => item.id}
-          ItemSeparatorComponent={() => <Divider />}
-          ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>No jobs for today...</Text>
-            </View>
-          )}
-          renderItem={({ item }) => (
+      <Text style={{ backgroundColor: '#f9fafb', textAlign: 'center', padding: 10 }}>
+        You are logged in as: {user?.first_name + ' ' + user?.surname}
+      </Text>
+
+      <Text style={styles.jobText}>Total Jobs: {bookings.length}</Text>
+      <Button onPress={handleLogout}>Logout</Button>
+
+      <FlatList
+        data={bookings}
+        keyExtractor={(item) => item.id}
+        ItemSeparatorComponent={() => <Divider />}
+        ListEmptyComponent={() => (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No jobs for today...</Text>
+          </View>
+        )}
+        renderItem={({ item }) => {
+
+          return (
             <List.Item
               onPress={() => navigation.navigate("Tech", {
                 id: item.id
               })}
-              title={item?.customer?.first_name + ' ' + item?.customer?.surname}
-              description={item.calendar}
-              right={() => <Text>
-                {formatAMPM(new Date(item?.datetime.replace(/-/g, "/")))}
-              </Text>}
-            />
-          )}
-        />
+              title={() => {
+                return (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <FontAwesome name="bookmark" size={14} color="black" />
 
-      </View>
+                    <Text style={{ marginLeft: 5 }}>{item.id}</Text>
+                  </View>
+                )
+              }}
+              description={() => {
+                console.log(item?.vehicle)
+
+                return (
+                  <View>
+                    {item?.customer?.first_name ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <FontAwesome name="user" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.customer?.first_name + ' ' + item?.customer?.surname}</Text>
+                      </View>
+                    ) : null}
+
+                    {item?.vehicle?.first_name ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <AntDesign name="car" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.customer?.first_name + ' ' + item?.customer?.surname}</Text>
+                      </View>
+                    ) : null}
+
+                    {item?.vehicle?.first_name ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <FontAwesome5 name="tools" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.customer?.first_name + ' ' + item?.customer?.surname}</Text>
+                      </View>
+                    ) : null}
+                  </View>
+                )
+              }}
+              right={() => (
+                <Text>
+                  {formatAMPM(new Date(item?.datetime.replace(/-/g, "/")))}
+                </Text>
+              )}
+            />
+          );
+        }}
+      />
     </SafeAreaView>
   );
 };
