@@ -65,7 +65,7 @@ const Tech = ({ route }) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView>
-        {/* <ReadOnlyForm {...booking} /> */}
+        <ReadOnlyForm {...booking} />
 
         <WritableForm {...booking} />
       </ScrollView>
