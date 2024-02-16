@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, ActivityIndicator, ScrollView, View } from "react-native";
-import { TextInput, Text } from "react-native-paper";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
@@ -20,6 +19,7 @@ const Tech = ({ route }) => {
 
   useEffect(() => {
     setIsLoading(true);
+
     (async () => {
       try {
         const token = await AsyncStorage.getItem("access_token");
@@ -37,6 +37,7 @@ const Tech = ({ route }) => {
           Toast.show('Please login again...', {
             duration: Toast.durations.LONG,
           });
+
           navigation.navigate('Login');
         }
 
