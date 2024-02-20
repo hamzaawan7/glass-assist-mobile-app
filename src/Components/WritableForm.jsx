@@ -27,6 +27,12 @@ const paymentType = [
   },
 ];
 
+const reasons = [
+  {
+    id: ''
+  }
+]
+
 export default function (booking) {
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
   const [preCName, setPreCName] = useState(booking?.pre_c_name);
@@ -233,6 +239,20 @@ export default function (booking) {
         value={customerName}
         onChangeText={setCustomerName}
       />
+
+      <Picker
+        label="Payment Type"
+        selectedValue={type}
+        onValueChange={(itemValue) =>
+          setType(itemValue)
+        }
+      >
+        {paymentType.map(stat => (
+          <Picker.Item label={stat.name} value={stat.id} />
+        ))}
+      </Picker>
+
+      <Text style={styles.text}>Job Not Completed</Text>
 
       <Picker
         label="Payment Type"
