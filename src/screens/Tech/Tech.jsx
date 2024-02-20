@@ -31,7 +31,7 @@ const Tech = ({ route }) => {
           const { data, success } = res.data;
 
           if (success) {
-            setBooking(data);
+            setBooking(data[0]);
           }
         } else {
           Toast.show('Please login again...', {

@@ -1,30 +1,48 @@
-import { Dimensions, StyleSheet, View, ActivityIndicator, Platform } from 'react-native'
 import React, { useRef, useState } from 'react'
+import { Dimensions, StyleSheet, View, ActivityIndicator, Platform } from 'react-native'
 import { TextInput, Text, Button, Checkbox } from "react-native-paper";
 
 import * as FileSystem from "expo-file-system";
 import { nanoid } from 'nanoid'
 import SignatureScreen from "react-native-signature-canvas";
 import Toast from 'react-native-root-toast';
+import { Picker } from "@react-native-picker/picker";
 
 import instance from '../api/axios';
 
 const { width } = Dimensions.get('screen');
 
+const paymentType = [
+  {
+    id: 'card',
+    name: 'Card'
+  },
+  {
+    id: 'cash',
+    name: 'Cash'
+  },
+  {
+    id: 'cheque',
+    name: 'Cheque'
+  },
+];
+
 export default function (booking) {
-  const [batchNumber, setBatchNumber] = useState(booking?.batch_number);
-  const [technicianNote, setTechnicianNote] = useState(booking?.technician_note);
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
   const [preCName, setPreCName] = useState(booking?.pre_c_name);
+  const [jobSignOff, setJobSignOff] = useState(booking?.job_complete)
+  const [customerName, setCustomerName] = useState(booking?.c_name)
+  const [type, setType] = useState(booking?.payment_type);
   const [preJobComplete, setPreJobComplete] = useState(booking?.pre_job_complete);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const ref = useRef();
+  const ref2 = useRef();
 
   const style = `.m-signature-pad--footer {display: none; margin: 0px;}`;
 
-  const handleOK = (signature) => {
+  const handleOK = (signature, field) => {
     const path = `${FileSystem.cacheDirectory}${nanoid()}-sign.png`;
     FileSystem.writeAsStringAsync(
       path,
@@ -42,10 +60,10 @@ export default function (booking) {
 
         const formData = new FormData();
         formData.append('image', { uri: uploadUri, name: filename, type });
-        formData.append('name', filename);
+        formData.append('name', field);
 
         try {
-          const res = await instance.put(
+          const res = await instance.post(
             `/api/booking/add-sig/${booking.id}`,
             formData,
             {
@@ -55,8 +73,7 @@ export default function (booking) {
             }
           );
 
-          const { data, success } = res.data;
-          console.log(data);
+          const { success } = res.data;
 
           if (success) {
             Toast.show(`Saved successfully`, {
@@ -81,11 +98,12 @@ export default function (booking) {
       const res = await instance.put(
         `/api/booking/update/${booking.id}`,
         {
-          batch_number: batchNumber,
-          technician_note: technicianNote,
           pre_check_notes: preCheckNotes,
           pre_c_name: preCName,
-          pre_job_complete: preJobComplete
+          pre_job_complete: preJobComplete,
+          job_complete: jobSignOff,
+          c_name: customerName,
+          payment_type: type
         }
       );
 
@@ -118,26 +136,16 @@ export default function (booking) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Technician Notes</Text>
-      <TextInput
-        label={"Eurethane Batch Number"}
-        style={styles.input}
-        value={batchNumber}
-        onChangeText={setBatchNumber}
-      />
-
-      <TextInput
-        label={""}
-        style={styles.input}
-        value={technicianNote}
-        onChangeText={setTechnicianNote}
-        multiline
-        numberOfLines={3}
-      />
-
       <Text style={styles.text}>Pre Installation Check</Text>
+      <Checkbox.Item
+        style={{ backgroundColor: "white" }}
+        label="Job Sign Off"
+        status={preJobComplete ? 'checked' : 'unchecked'}
+        onPress={() => setPreJobComplete(!preJobComplete)}
+      />
+
       <TextInput
-        label={"Pre Installation Check - Notes"}
+        label="Pre Installation Check - Notes"
         style={styles.input}
         value={preCheckNotes}
         onChangeText={setPreCheckNotes}
@@ -148,7 +156,7 @@ export default function (booking) {
       <SignatureScreen
         ref={ref}
         style={{ width: width - 25, height: 200 }}
-        onOK={handleOK}
+        onOK={(signature) => handleOK(signature, 'signature')}
         autoClear={true}
         webStyle={style}
         backgroundColor={'lightgray'}
@@ -175,18 +183,68 @@ export default function (booking) {
       </View>
 
       <TextInput
-        label={"Customer Name"}
+        label="Customer Name"
         style={styles.input}
         value={preCName}
         onChangeText={setPreCName}
       />
 
+      <Text style={styles.text}>Job Sign Off</Text>
+
+      <SignatureScreen
+        ref={ref2}
+        style={{ width: width - 25, height: 200 }}
+        onOK={(signature) => handleOK(signature, 'signature_1')}
+        autoClear={true}
+        webStyle={style}
+        backgroundColor={'lightgray'}
+      />
+
+      <View style={styles.row}>
+        <Button
+          mode="contained"
+          style={styles.saveButton}
+          loading={isLoading}
+          onPress={() => ref2.current?.readSignature()}
+        >
+          Save Signature
+        </Button>
+
+        <Button
+          mode="contained"
+          style={styles.saveButton}
+          loading={isLoading}
+          onPress={() => ref2.current?.clearSignature()}
+        >
+          Clear
+        </Button>
+      </View>
+
       <Checkbox.Item
         style={{ backgroundColor: "white" }}
-        label="Customer Approved"
-        status={preJobComplete ? 'checked' : 'unchecked'}
-        onPress={() => setPreJobComplete(!preJobComplete)}
+        label="Job Sign Off"
+        status={jobSignOff ? 'checked' : 'unchecked'}
+        onPress={() => setJobSignOff(!jobSignOff)}
       />
+
+      <TextInput
+        label="Customer Name"
+        style={styles.input}
+        value={customerName}
+        onChangeText={setCustomerName}
+      />
+
+      <Picker
+        label="Payment Type"
+        selectedValue={type}
+        onValueChange={(itemValue) =>
+          setType(itemValue)
+        }
+      >
+        {paymentType.map(stat => (
+          <Picker.Item label={stat.name} value={stat.id} />
+        ))}
+      </Picker>
 
       <Button
         mode="contained"
@@ -196,11 +254,6 @@ export default function (booking) {
       >
         Save Job Card
       </Button>
-
-      <Text style={styles.text}>Pre Install Check Completed: Date/Time</Text>
-      <Text style={styles.readonlyText}>
-        01/03/2023 at 01:57:08pm
-      </Text>
     </View>
   );
 }
