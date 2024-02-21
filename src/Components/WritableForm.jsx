@@ -7,6 +7,8 @@ import { nanoid } from 'nanoid'
 import SignatureScreen from "react-native-signature-canvas";
 import Toast from 'react-native-root-toast';
 import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 
 import instance from '../api/axios';
 
@@ -29,8 +31,21 @@ const paymentType = [
 
 const reasons = [
   {
-    id: ''
-  }
+    id: 'bad_weather',
+    name: 'Bad Weather',
+  },
+  {
+    id: 'wrong_glass_supplied',
+    name: 'Wrong Glass Supplied',
+  },
+  {
+    id: 'customer_unavailable',
+    name: 'Customer Unavailable',
+  },
+  {
+    id: 'wrong_address',
+    name: 'Wrong Address',
+  },
 ]
 
 export default function (booking) {
@@ -40,6 +55,8 @@ export default function (booking) {
   const [customerName, setCustomerName] = useState(booking?.c_name)
   const [type, setType] = useState(booking?.payment_type);
   const [preJobComplete, setPreJobComplete] = useState(booking?.pre_job_complete);
+  const [techStatement, setTechStatement] = useState(booking?.technician_statement);
+  const [techNote, setTechNote] = useState(booking?.technician_note)
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,6 +66,8 @@ export default function (booking) {
   const style = `.m-signature-pad--footer {display: none; margin: 0px;}`;
 
   const handleOK = (signature, field) => {
+    setIsLoading(true);
+
     const path = `${FileSystem.cacheDirectory}${nanoid()}-sign.png`;
     FileSystem.writeAsStringAsync(
       path,
@@ -57,7 +76,6 @@ export default function (booking) {
     )
       .then(() => FileSystem.getInfoAsync(path))
       .then(async ({ uri }) => {
-        setIsLoading(true);
         const filename = uri.substring(uri.lastIndexOf('/') + 1)
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
 
@@ -109,7 +127,8 @@ export default function (booking) {
           pre_job_complete: preJobComplete,
           job_complete: jobSignOff,
           c_name: customerName,
-          payment_type: type
+          payment_type: type,
+          technician_statement: techStatement
         }
       );
 
@@ -143,6 +162,7 @@ export default function (booking) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Pre Installation Check</Text>
+
       <Checkbox.Item
         style={{ backgroundColor: "white" }}
         label="Job Sign Off"
@@ -256,15 +276,88 @@ export default function (booking) {
 
       <Picker
         label="Payment Type"
-        selectedValue={type}
+        selectedValue={techStatement}
         onValueChange={(itemValue) =>
-          setType(itemValue)
+          setTechStatement(itemValue)
         }
       >
-        {paymentType.map(stat => (
+        {reasons.map(stat => (
           <Picker.Item label={stat.name} value={stat.id} />
         ))}
       </Picker>
+
+      <TextInput
+        label="Reason, if any other"
+        style={styles.input}
+        value={techNote}
+        onChangeText={setTechNote}
+        multiline
+        numberOfLines={5}
+      />
+
+      <Text style={styles.text}>Documents</Text>
+
+      <View style={{ flexDirection: 'row', gap: 10 }}>
+        <Button onPress={async () => {
+          const document = await DocumentPicker.getDocumentAsync();
+
+          if (!document.type === 'cancel') {
+
+          }
+        }}>Select document</Button>
+        <Button onPress={async () => {
+          const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+          });
+
+          if (!result.canceled) {
+            setIsLoading(true);
+
+            const uri = result.assets[0].uri;
+
+            const filename = uri.substring(uri.lastIndexOf('/') + 1)
+            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+
+            const match = /\.(\w+)$/.exec(filename);
+            const type = match ? `image/${match[1]}` : `image`;
+
+            const formData = new FormData();
+            formData.append('image', { uri: uploadUri, name: filename, type });
+            formData.append('name', field);
+
+            try {
+              const res = await instance.post(
+                `/api/booking/add-sig/${booking.id}`,
+                formData,
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+                }
+              );
+
+              const { success } = res.data;
+
+              if (success) {
+                Toast.show(`Uploaded successfully`, {
+                  duration: Toast.durations.LONG,
+                });
+              }
+
+              setIsLoading(false);
+            } catch (error) {
+              console.error(error.response.data);
+              setIsLoading(false);
+              Toast.show(`${error.response.data?.message}`, {
+                duration: Toast.durations.LONG,
+              });
+            }
+          }
+        }}>Select Image</Button>
+      </View>
 
       <Button
         mode="contained"

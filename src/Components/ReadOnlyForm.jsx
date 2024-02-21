@@ -1,8 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Text, Card } from "react-native-paper";
-
-import { Picker } from "@react-native-picker/picker";
+import { Text, Card, List } from "react-native-paper";
 
 import styles from '../screens/Tech/style';
 import TextLabel from './TextLabel'
@@ -33,41 +31,59 @@ const status = [
 export default function (booking) {
   return (
     <View>
-      <Text style={styles.text}>Job Card {booking.id}</Text>
-
-      <View style={styles.picker}>
-        <Picker
-          label="Status"
-          selectedValue={booking?.status}
-          enabled={false}
-        >
-          {status.map(stat => (
-            <Picker.Item label={stat.name} value={stat.id} />
-          ))}
-        </Picker>
-      </View>
-
-      <TextLabel
-        label="Calender"
-        value={booking?.calendar}
+      <List.Item
+        title={props => <Text {...props}>{booking.id}</Text>}
+        left={props => <Text {...props} style={styles.text}>Job Number:</Text>}
       />
 
-      <Card style={{ paddingHorizontal: 10 }}>
-        <TextLabel
-          label="Ref Caller Name"
-          value={booking?.ref_caller_name}
-        />
+      <List.Item
+        title={props => <Text {...props}>{booking.datetime}</Text>}
+        left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
+      />
 
-        <TextLabel
-          label="Contact Number"
-          value={booking?.ref_caller_contact_no}
-        />
+      <List.Item
+        title={props => <Text {...props}>{status.find((s) => s.id == booking.status)?.name}</Text>}
+        left={props => <Text {...props} style={styles.text}>Status:</Text>}
+      />
 
-        <TextLabel
-          label="Invoice Number"
-          value={booking?.invoice_number}
-        />
-      </Card>
+      <List.Item
+        title={props => <Text {...props}>{booking?.added_by?.username}</Text>}
+        left={props => <Text {...props} style={styles.text}>Added By:</Text>}
+      />
+
+      <List.Item
+        title={props => <Text {...props}>{booking?.date_added}</Text>}
+        left={props => <Text {...props} style={styles.text}>Added On:</Text>}
+      />
+
+      <List.Item
+        title={props => <Text {...props}>{booking?.updated_by?.username}</Text>}
+        left={props => <Text {...props} style={styles.text}>Updated By:</Text>}
+      />
+
+      <List.Item
+        title={props => <Text {...props}>{booking?.date_updated}</Text>}
+        left={props => <Text {...props} style={styles.text}>Updated On:</Text>}
+      />
+
+      <List.Section style={{ paddingHorizontal: 10 }}>
+        <List.Accordion title="Details">
+          <List.Item
+            title="Ref Caller Name"
+            description={booking?.ref_caller_name}
+          />
+
+          <TextLabel
+            label="Contact Number"
+            value={booking?.ref_caller_contact_no}
+          />
+
+          <TextLabel
+            label="Invoice Number"
+            value={booking?.invoice_number}
+          />
+        </List.Accordion>
+      </List.Section>
 
       <Card style={{ marginTop: 15 }}>
         <Card.Title title="Customer Details" />

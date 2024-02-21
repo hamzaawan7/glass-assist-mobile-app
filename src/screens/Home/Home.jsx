@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
-import { Button, Divider, List, Text } from "react-native-paper";
+import { Button, Divider, List, Text, Badge } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-root-toast";
-import { FontAwesome, FontAwesome5, AntDesign } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
 
 import styles from "./style";
 
@@ -159,6 +159,14 @@ const Home = ({ navigation }) => {
               description={() => {
                 return (
                   <View style={{ columnGap: 10 }}>
+                    {item?.company?.name ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <FontAwesome name="industry" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.company?.name}</Text>
+                      </View>
+                    ) : null}
+
                     {item?.customer?.first_name ? (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <FontAwesome name="user" size={14} color="black" />
@@ -175,6 +183,22 @@ const Home = ({ navigation }) => {
                       </View>
                     ) : null}
 
+                    {item?.job_location?.address_line_1 ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <FontAwesome name="send" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.job_location?.address_line_1}</Text>
+                      </View>
+                    ) : null}
+
+                    {item?.job_operation?.description ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <Feather name="list" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.job_operation?.description}</Text>
+                      </View>
+                    ) : null}
+
                     {user ? (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <FontAwesome5 name="tools" size={14} color="black" />
@@ -186,8 +210,10 @@ const Home = ({ navigation }) => {
                 )
               }}
               right={() => (
-                <Text>
-                  {formatAMPM(new Date(item?.datetime.replace(/-/g, "/")))}
+                <Text style={{ paddingHorizontal: 4 }}>
+                  {item?.job_type === 1 ? (
+                    <Badge>Business</Badge>
+                  ) : ('')}
                 </Text>
               )}
             />

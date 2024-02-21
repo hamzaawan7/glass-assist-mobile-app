@@ -20,8 +20,7 @@ export default styles = StyleSheet.create({
     text: {
         fontSize: 20,
         textAlign: 'center',
-        marginTop: 30,
-        marginBottom: 30
+        fontWeight: 'bold',
     },
     header: {
         display: 'flex',
