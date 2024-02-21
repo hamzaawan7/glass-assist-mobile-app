@@ -31,40 +31,42 @@ const status = [
 export default function (booking) {
   return (
     <View>
-      <List.Item
-        title={props => <Text {...props}>{booking.id}</Text>}
-        left={props => <Text {...props} style={styles.text}>Job Number:</Text>}
-      />
+      <View style={{ marginHorizontal: 10 }}>
+        <List.Item
+          title={props => <Text {...props}>{booking.id}</Text>}
+          left={props => <Text {...props} style={styles.text}>Job Number:</Text>}
+        />
 
-      <List.Item
-        title={props => <Text {...props}>{booking.datetime}</Text>}
-        left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
-      />
+        <List.Item
+          title={props => <Text {...props}>{booking.datetime}</Text>}
+          left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
+        />
 
-      <List.Item
-        title={props => <Text {...props}>{status.find((s) => s.id == booking.status)?.name}</Text>}
-        left={props => <Text {...props} style={styles.text}>Status:</Text>}
-      />
+        <List.Item
+          title={props => <Text {...props}>{status.find((s) => s.id == booking.status)?.name}</Text>}
+          left={props => <Text {...props} style={styles.text}>Status:</Text>}
+        />
 
-      <List.Item
-        title={props => <Text {...props}>{booking?.added_by?.username}</Text>}
-        left={props => <Text {...props} style={styles.text}>Added By:</Text>}
-      />
+        <List.Item
+          title={props => <Text {...props}>{booking?.added_by?.username}</Text>}
+          left={props => <Text {...props} style={styles.text}>Added By:</Text>}
+        />
 
-      <List.Item
-        title={props => <Text {...props}>{booking?.date_added}</Text>}
-        left={props => <Text {...props} style={styles.text}>Added On:</Text>}
-      />
+        <List.Item
+          title={props => <Text {...props}>{booking?.date_added}</Text>}
+          left={props => <Text {...props} style={styles.text}>Added On:</Text>}
+        />
 
-      <List.Item
-        title={props => <Text {...props}>{booking?.updated_by?.username}</Text>}
-        left={props => <Text {...props} style={styles.text}>Updated By:</Text>}
-      />
+        <List.Item
+          title={props => <Text {...props}>{booking?.updated_by?.username}</Text>}
+          left={props => <Text {...props} style={styles.text}>Updated By:</Text>}
+        />
 
-      <List.Item
-        title={props => <Text {...props}>{booking?.date_updated}</Text>}
-        left={props => <Text {...props} style={styles.text}>Updated On:</Text>}
-      />
+        <List.Item
+          title={props => <Text {...props}>{booking?.date_updated}</Text>}
+          left={props => <Text {...props} style={styles.text}>Updated On:</Text>}
+        />
+      </View>
 
       <List.Section style={{ paddingHorizontal: 10 }}>
         <List.Accordion title="Details">

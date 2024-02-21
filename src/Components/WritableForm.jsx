@@ -341,7 +341,7 @@ export default function (booking) {
 
       <Text style={styles.text}>Documents</Text>
 
-      <View style={{ flexDirection: 'row', gap: 10 }}>
+      <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between' }}>
         <Button onPress={async () => {
           try {
             const document = await DocumentPicker.getDocumentAsync();
@@ -352,7 +352,7 @@ export default function (booking) {
           } catch (error) {
             console.log(error)
           }
-        }}>Select document</Button>
+        }}>Select Document</Button>
 
         <Button onPress={async () => {
           const result = await ImagePicker.launchCameraAsync({
