@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Dimensions, StyleSheet, View, ActivityIndicator, Platform } from 'react-native'
-import { TextInput, Text, Button, Checkbox } from "react-native-paper";
+import { TextInput, Text, Button, Checkbox, List } from "react-native-paper";
 
 import * as FileSystem from "expo-file-system";
 import { nanoid } from 'nanoid'
@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 
 import instance from '../api/axios';
+import Document from './DocumentTable';
 
 const { width } = Dimensions.get('screen');
 
@@ -59,6 +60,7 @@ export default function (booking) {
   const [techNote, setTechNote] = useState(booking?.technician_note)
 
   const [isLoading, setIsLoading] = useState(false);
+  const [documents, setDocuments] = useState([]);
 
   const ref = useRef();
   const ref2 = useRef();
@@ -150,6 +152,48 @@ export default function (booking) {
       });
     }
   }
+
+  const uploadFile = useCallback(async (uri) => {
+    const filename = uri.substring(uri.lastIndexOf('/') + 1)
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+
+    const match = /\.(\w+)$/.exec(filename);
+    const type = match ? `image/${match[1]}` : `image`;
+
+    const formData = new FormData();
+    formData.append('image', { uri: uploadUri, name: filename, type });
+    formData.append('name', 'document');
+
+    try {
+      const res = await instance.post(
+        `/api/booking/document/${booking.id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+
+      const { data, success } = res.data;
+
+      setDocuments((prev) => [...prev, data]);
+
+      if (success) {
+        Toast.show(`Uploaded successfully`, {
+          duration: Toast.durations.LONG,
+        });
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error.response.data);
+      setIsLoading(false);
+      Toast.show(`${error.response.data?.message}`, {
+        duration: Toast.durations.LONG,
+      });
+    }
+  }, [booking]);
 
   if (isLoading) {
     return (
@@ -299,12 +343,17 @@ export default function (booking) {
 
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <Button onPress={async () => {
-          const document = await DocumentPicker.getDocumentAsync();
+          try {
+            const document = await DocumentPicker.getDocumentAsync();
 
-          if (!document.type === 'cancel') {
-
+            if (document.type !== 'cancel') {
+              await uploadFile(document.uri)
+            }
+          } catch (error) {
+            console.log(error)
           }
         }}>Select document</Button>
+
         <Button onPress={async () => {
           const result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -318,46 +367,16 @@ export default function (booking) {
 
             const uri = result.assets[0].uri;
 
-            const filename = uri.substring(uri.lastIndexOf('/') + 1)
-            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-
-            const match = /\.(\w+)$/.exec(filename);
-            const type = match ? `image/${match[1]}` : `image`;
-
-            const formData = new FormData();
-            formData.append('image', { uri: uploadUri, name: filename, type });
-            formData.append('name', field);
-
-            try {
-              const res = await instance.post(
-                `/api/booking/add-sig/${booking.id}`,
-                formData,
-                {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
-                }
-              );
-
-              const { success } = res.data;
-
-              if (success) {
-                Toast.show(`Uploaded successfully`, {
-                  duration: Toast.durations.LONG,
-                });
-              }
-
-              setIsLoading(false);
-            } catch (error) {
-              console.error(error.response.data);
-              setIsLoading(false);
-              Toast.show(`${error.response.data?.message}`, {
-                duration: Toast.durations.LONG,
-              });
-            }
+            await uploadFile(uri);
           }
-        }}>Select Image</Button>
+        }}>Take Picture</Button>
       </View>
+
+      <List.Section style={{ paddingHorizontal: 10 }}>
+        <List.Accordion title="Documents">
+          <Document items={documents} />
+        </List.Accordion>
+      </List.Section>
 
       <Button
         mode="contained"
