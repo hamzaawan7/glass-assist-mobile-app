@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Dimensions, StyleSheet, View, ActivityIndicator, Platform } from 'react-native'
+import { Dimensions, StyleSheet, View, ActivityIndicator, Platform, Image } from 'react-native'
 import { TextInput, Text, Button, Checkbox, List } from "react-native-paper";
 
 import * as FileSystem from "expo-file-system";
@@ -32,6 +32,10 @@ const paymentType = [
 
 const reasons = [
   {
+    id: '',
+    name: 'Select Reason',
+  },
+  {
     id: 'bad_weather',
     name: 'Bad Weather',
   },
@@ -57,7 +61,10 @@ export default function (booking) {
   const [type, setType] = useState(booking?.payment_type);
   const [preJobComplete, setPreJobComplete] = useState(booking?.pre_job_complete);
   const [techStatement, setTechStatement] = useState(booking?.technician_statement);
-  const [techNote, setTechNote] = useState(booking?.technician_note)
+  const [techNote, setTechNote] = useState(booking?.technician_note);
+  const [batchNumber, setBatchNumber] = useState(booking?.batch_number)
+  const [techDetails, setTechDetails] = useState(booking?.tech_details);
+  const [jobNotCompleted, setJobNotCompleted] = useState(booking?.job_not_completed);
 
   const [isLoading, setIsLoading] = useState(false);
   const [documents, setDocuments] = useState([]);
@@ -130,7 +137,11 @@ export default function (booking) {
           job_complete: jobSignOff,
           c_name: customerName,
           payment_type: type,
-          technician_statement: techStatement
+          technician_statement: techStatement,
+          batch_number: batchNumber,
+          tech_details: techDetails,
+          job_not_completed: jobNotCompleted,
+          technician_note: techNote,
         }
       );
 
@@ -205,178 +216,260 @@ export default function (booking) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Pre Installation Check</Text>
-
-      <Checkbox.Item
-        style={{ backgroundColor: "white" }}
-        label="Job Sign Off"
-        status={preJobComplete ? 'checked' : 'unchecked'}
-        onPress={() => setPreJobComplete(!preJobComplete)}
-      />
-
-      <TextInput
-        label="Pre Installation Check - Notes"
-        style={styles.input}
-        value={preCheckNotes}
-        onChangeText={setPreCheckNotes}
-        multiline
-        numberOfLines={5}
-      />
-
-      <SignatureScreen
-        ref={ref}
-        style={{ width: width - 25, height: 200 }}
-        onOK={(signature) => handleOK(signature, 'signature')}
-        autoClear={true}
-        webStyle={style}
-        backgroundColor={'lightgray'}
-      />
-
-      <View style={styles.row}>
-        <Button
-          mode="contained"
-          style={styles.saveButton}
-          loading={isLoading}
-          onPress={() => ref.current?.readSignature()}
-        >
-          Save Signature
-        </Button>
-
-        <Button
-          mode="contained"
-          style={styles.saveButton}
-          loading={isLoading}
-          onPress={() => ref.current?.clearSignature()}
-        >
-          Clear
-        </Button>
-      </View>
-
-      <TextInput
-        label="Customer Name"
-        style={styles.input}
-        value={preCName}
-        onChangeText={setPreCName}
-      />
-
-      <Text style={styles.text}>Job Sign Off</Text>
-
-      <SignatureScreen
-        ref={ref2}
-        style={{ width: width - 25, height: 200 }}
-        onOK={(signature) => handleOK(signature, 'signature_1')}
-        autoClear={true}
-        webStyle={style}
-        backgroundColor={'lightgray'}
-      />
-
-      <View style={styles.row}>
-        <Button
-          mode="contained"
-          style={styles.saveButton}
-          loading={isLoading}
-          onPress={() => ref2.current?.readSignature()}
-        >
-          Save Signature
-        </Button>
-
-        <Button
-          mode="contained"
-          style={styles.saveButton}
-          loading={isLoading}
-          onPress={() => ref2.current?.clearSignature()}
-        >
-          Clear
-        </Button>
-      </View>
-
-      <Checkbox.Item
-        style={{ backgroundColor: "white" }}
-        label="Job Sign Off"
-        status={jobSignOff ? 'checked' : 'unchecked'}
-        onPress={() => setJobSignOff(!jobSignOff)}
-      />
-
-      <TextInput
-        label="Customer Name"
-        style={styles.input}
-        value={customerName}
-        onChangeText={setCustomerName}
-      />
-
-      <Picker
-        label="Payment Type"
-        selectedValue={type}
-        onValueChange={(itemValue) =>
-          setType(itemValue)
-        }
-      >
-        {paymentType.map(stat => (
-          <Picker.Item label={stat.name} value={stat.id} />
-        ))}
-      </Picker>
-
-      <Text style={styles.text}>Job Not Completed</Text>
-
-      <Picker
-        label="Payment Type"
-        selectedValue={techStatement}
-        onValueChange={(itemValue) =>
-          setTechStatement(itemValue)
-        }
-      >
-        {reasons.map(stat => (
-          <Picker.Item label={stat.name} value={stat.id} />
-        ))}
-      </Picker>
-
-      <TextInput
-        label="Reason, if any other"
-        style={styles.input}
-        value={techNote}
-        onChangeText={setTechNote}
-        multiline
-        numberOfLines={5}
-      />
-
-      <Text style={styles.text}>Documents</Text>
-
-      <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between' }}>
-        <Button onPress={async () => {
-          try {
-            const document = await DocumentPicker.getDocumentAsync();
-
-            if (document.type !== 'cancel') {
-              await uploadFile(document.uri)
-            }
-          } catch (error) {
-            console.log(error)
-          }
-        }}>Select Document</Button>
-
-        <Button onPress={async () => {
-          const result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-          });
-
-          if (!result.canceled) {
-            setIsLoading(true);
-
-            const uri = result.assets[0].uri;
-
-            await uploadFile(uri);
-          }
-        }}>Take Picture</Button>
-      </View>
-
       <List.Section style={{ paddingHorizontal: 10 }}>
         <List.Accordion title="Documents">
+          <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between' }}>
+            <Button onPress={async () => {
+              try {
+                const document = await DocumentPicker.getDocumentAsync();
+
+                if (document.type !== 'cancel') {
+                  await uploadFile(document.uri)
+                }
+              } catch (error) {
+                console.log(error)
+              }
+            }}>Select Document</Button>
+
+            <Button onPress={async () => {
+              const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+              });
+
+              if (!result.canceled) {
+                setIsLoading(true);
+
+                const uri = result.assets[0].uri;
+
+                await uploadFile(uri);
+              }
+            }}>Take Picture</Button>
+          </View>
+
           <Document items={documents} />
         </List.Accordion>
       </List.Section>
+
+      <List.Section style={{ paddingHorizontal: 10 }}>
+        <List.Accordion title="Pre Installation Check">
+          <Checkbox.Item
+            style={{ backgroundColor: "white", marginTop: 10 }}
+            label="Pre Installation Check"
+            status={preJobComplete ? 'checked' : 'unchecked'}
+            onPress={() => setPreJobComplete(!preJobComplete)}
+          />
+
+          <Image
+            source={require('../assets/pre_check.jpeg')}
+            style={{ marginTop: 10 }}
+          />
+
+          <TextInput
+            label="Notes"
+            style={styles.input}
+            value={preCheckNotes}
+            onChangeText={setPreCheckNotes}
+            multiline
+            numberOfLines={5}
+          />
+
+          <TextInput
+            label="Customer Name"
+            style={styles.input}
+            value={preCName}
+            onChangeText={setPreCName}
+          />
+
+          <SignatureScreen
+            ref={ref}
+            style={{ width: width - 25, height: 200 }}
+            onOK={(signature) => handleOK(signature, 'signature')}
+            autoClear={true}
+            webStyle={style}
+            backgroundColor={'lightgray'}
+          />
+
+          <View style={styles.row}>
+            <Button
+              mode="contained"
+              style={styles.saveButton}
+              loading={isLoading}
+              onPress={() => ref.current?.readSignature()}
+            >
+              Submit
+            </Button>
+
+            <Button
+              mode="outline"
+              // style={styles.saveButton}
+              loading={isLoading}
+              onPress={() => ref.current?.clearSignature()}
+            >
+              Clear
+            </Button>
+          </View>
+
+          <Text style={styles.text}>Technician Notes</Text>
+
+          <TextInput
+            label="Eurethane Batch Number:"
+            style={styles.input}
+            value={batchNumber}
+            onChangeText={setBatchNumber}
+          />
+
+          <TextInput
+            label="Tech Details"
+            style={styles.input}
+            value={techDetails}
+            onChangeText={setTechDetails}
+            multiline
+            numberOfLines={5}
+          />
+
+        </List.Accordion>
+      </List.Section>
+
+      <List.Section style={{ paddingHorizontal: 10 }}>
+        <List.Accordion title="Post Installation Documents">
+          <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between' }}>
+            <Button onPress={async () => {
+              try {
+                const document = await DocumentPicker.getDocumentAsync();
+
+                if (document.type !== 'cancel') {
+                  await uploadFile(document.uri)
+                }
+              } catch (error) {
+                console.log(error)
+              }
+            }}>Select Document</Button>
+
+            <Button onPress={async () => {
+              const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+              });
+
+              if (!result.canceled) {
+                setIsLoading(true);
+
+                const uri = result.assets[0].uri;
+
+                await uploadFile(uri);
+              }
+            }}>Take Picture</Button>
+          </View>
+
+          <Document items={documents} />
+        </List.Accordion>
+      </List.Section>
+
+      <List.Section style={{ paddingHorizontal: 10 }}>
+        <List.Accordion title="Job Sign Off">
+          <Checkbox.Item
+            style={{ backgroundColor: "white", marginTop: 10 }}
+            label="Job Sign Off"
+            status={jobSignOff ? 'checked' : 'unchecked'}
+            onPress={() => setJobSignOff(!jobSignOff)}
+          />
+
+          <TextInput
+            label="Customer Name"
+            style={styles.input}
+            value={customerName}
+            onChangeText={setCustomerName}
+          />
+
+          <Picker
+            label="Payment Type"
+            selectedValue={type}
+            onValueChange={(itemValue) =>
+              setType(itemValue)
+            }
+          >
+            {paymentType.map(stat => (
+              <Picker.Item label={stat.name} value={stat.id} />
+            ))}
+          </Picker>
+
+          <SignatureScreen
+            ref={ref2}
+            style={{ width: width - 25, height: 200 }}
+            onOK={(signature) => handleOK(signature, 'signature_1')}
+            autoClear={true}
+            webStyle={style}
+            backgroundColor={'lightgray'}
+          />
+
+          <View style={styles.row}>
+            <Button
+              mode="contained"
+              style={styles.saveButton}
+              loading={isLoading}
+              onPress={() => ref2.current?.readSignature()}
+            >
+              Save Signature
+            </Button>
+
+            <Button
+              mode="outline"
+              loading={isLoading}
+              onPress={() => ref2.current?.clearSignature()}
+            >
+              Clear
+            </Button>
+          </View>
+
+          <List.Item
+            title="Completion Date/Time"
+            description={booking?.s_date}
+          />
+
+          <List.Item
+            title="Username"
+            description={booking?.job_completed_by?.full_name}
+          />
+        </List.Accordion>
+      </List.Section>
+
+      <List.Section style={{ paddingHorizontal: 10 }}>
+        <List.Accordion title="Job Not Completed">
+          <Picker
+            label="Reason"
+            selectedValue={techStatement}
+            onValueChange={(itemValue) =>
+              setTechStatement(itemValue)
+            }
+          >
+            {reasons.map(stat => (
+              <Picker.Item label={stat.name} value={stat.id} />
+            ))}
+          </Picker>
+
+          <Checkbox.Item
+            style={{ backgroundColor: "white", marginTop: 10 }}
+            label="Job Not Completed"
+            status={jobNotCompleted ? 'checked' : 'unchecked'}
+            onPress={() => setJobNotCompleted(!jobNotCompleted)}
+          />
+
+          <TextInput
+            label="Reason, if any other"
+            style={styles.input}
+            value={techNote}
+            onChangeText={setTechNote}
+            multiline
+            numberOfLines={5}
+          />
+        </List.Accordion>
+      </List.Section>
+
 
       <Button
         mode="contained"

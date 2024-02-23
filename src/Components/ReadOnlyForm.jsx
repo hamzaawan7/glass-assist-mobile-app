@@ -74,42 +74,92 @@ export default function (booking) {
 
           <List.Item
             title="Business:"
-            value={booking?.customer?.business}
+            description={booking?.customer?.business}
           />
 
           <List.Item
             title="Name:"
-            value={booking?.customer?.first_name}
+            description={booking?.customer?.first_name}
           />
 
           <List.Item
             title="Job Location:"
-            value={`${booking?.job_location?.address_1} ${booking?.job_location?.address_2}`}
+            description={`${booking?.job_location?.address_1 || ''} ${booking?.job_location?.address_2 || ''}`}
           />
 
           <List.Item
             title="Postcode:"
-            value={booking?.job_location?.postcode}
+            description={booking?.job_location?.postcode}
           />
 
           <List.Item
             title="Phone No:"
-            value={booking?.customer?.phone}
+            description={booking?.customer?.phone}
           />
 
           <List.Item
             title="Mobile Phone:"
-            value={booking?.customer?.mobile}
+            description={booking?.customer?.mobile}
           />
 
           <List.Item
             title="Order Number:"
-            value={booking?.order_number}
+            description={booking?.order_number}
+          />
+
+          <List.Item
+            title="Vehicle Reg:"
+            description={booking?.vehicle?.reg_no}
+          />
+
+          <List.Item
+            title="Make:"
+            description={booking?.vehicle?.car_make?.name}
+          />
+
+          <List.Item
+            title="Model:"
+            description={booking?.vehicle?.car_model?.name}
+          />
+
+          <List.Item
+            title="VIN Number:"
+            description={booking?.vehicle?.vin_number}
+          />
+
+          <List.Item
+            title="Mileage:"
+            description={booking?.miles}
+          />
+
+          <List.Item
+            title="Glass Position:" // www_lookups -> glassItemDescription
+            description={booking?.miles}
+          />
+
+          <List.Item
+            title="Job Cost:"
+            description={booking?.job_cost}
+          />
+
+          <List.Item
+            title="Work Required:"
+            description={booking?.work_required}
+          />
+
+          <List.Item
+            title="Additional Details"
+            description={booking?.additional_details}
+          />
+
+          <List.Item
+            title="Sub Contractor"
+            description={booking?.sub_contractor?.name}
           />
         </List.Accordion>
       </List.Section>
 
-      <List.Section style={{ paddingHorizontal: 10 }}>
+      {/* <List.Section style={{ paddingHorizontal: 10 }}>
         <List.Accordion title="Details">
           <List.Item
             title="Ref Caller Name"
@@ -143,30 +193,14 @@ export default function (booking) {
         <Card.Title title="Vehicle Information" />
 
         <Card.Content>
-          <TextLabel
-            label="Vehicle Reg"
-            value={booking?.vehicle?.reg_no}
-          />
 
-          <TextLabel
-            label="VIN No"
-            value={booking?.vehicle?.vin_number}
-          />
 
           <TextLabel
             label="Year of Manf:"
             value={booking?.vehicle?.yearOfManufacture}
           />
 
-          <TextLabel
-            label="Make"
-            value={booking?.vehicle?.car_make?.name}
-          />
 
-          <TextLabel
-            label="Model"
-            value={booking?.vehicle?.car_model?.name}
-          />
         </Card.Content>
       </Card>
 
@@ -174,15 +208,8 @@ export default function (booking) {
         <Card.Title title="Job/Work Details" />
 
         <Card.Content>
-          <TextLabel
-            label="Work Required"
-            value={booking?.work_required}
-          />
 
-          <TextLabel
-            label="Additional Details"
-            value={booking?.additional_details}
-          />
+
         </Card.Content>
       </Card>
 
@@ -201,10 +228,7 @@ export default function (booking) {
         <Card.Title title="JOB SUB CONTRACTOR DETAILS" />
 
         <Card.Content>
-          <TextLabel
-            label="Sub Contractor"
-            value={booking?.sub_contractor?.name}
-          />
+
 
           <TextLabel
             label="Mobile Phone"
@@ -226,10 +250,7 @@ export default function (booking) {
             value={booking?.batch_no}
           />
 
-          <TextLabel
-            label=""
-            value={booking?.tech_details}
-          />
+          
         </Card.Content>
       </Card>
 
@@ -281,7 +302,7 @@ export default function (booking) {
             value={booking?.job_location?.country}
           />
         </Card.Content>
-      </Card>
+      </Card> */}
     </View>
   );
 };
