@@ -283,34 +283,48 @@ export default function (booking) {
             onChangeText={setPreCName}
           />
 
-          <SignatureScreen
-            ref={ref}
-            style={{ width: width - 25, height: 200 }}
-            onOK={(signature) => handleOK(signature, 'signature')}
-            autoClear={true}
-            webStyle={style}
-            backgroundColor={'lightgray'}
-          />
+          {booking?.signature ? (
+            <Image
+              source={{
+                uri: `https://staging.glassassistuk.co.uk/files/Signatures/${booking?.signature}`,
+              }}
+              style={{
+                width: '100%',
+                height: 300,
+                resizeMode: 'contain'
+              }}
+            />
+          ) : (
+            <View>
+              <SignatureScreen
+                ref={ref}
+                style={{ width: width - 25, height: 200 }}
+                onOK={(signature) => handleOK(signature, 'signature')}
+                autoClear={true}
+                webStyle={style}
+                backgroundColor={'lightgray'}
+              />
 
-          <View style={styles.row}>
-            <Button
-              mode="contained"
-              style={styles.saveButton}
-              loading={isLoading}
-              onPress={() => ref.current?.readSignature()}
-            >
-              Submit
-            </Button>
+              <View style={styles.row}>
+                <Button
+                  mode="contained"
+                  style={styles.saveButton}
+                  loading={isLoading}
+                  onPress={() => ref.current?.readSignature()}
+                >
+                  Submit
+                </Button>
 
-            <Button
-              mode="outline"
-              // style={styles.saveButton}
-              loading={isLoading}
-              onPress={() => ref.current?.clearSignature()}
-            >
-              Clear
-            </Button>
-          </View>
+                <Button
+                  mode="outline"
+                  loading={isLoading}
+                  onPress={() => ref.current?.clearSignature()}
+                >
+                  Clear
+                </Button>
+              </View>
+            </View>
+          )}
 
           <Text style={styles.text}>Technician Notes</Text>
 
@@ -398,33 +412,47 @@ export default function (booking) {
             ))}
           </Picker>
 
-          <SignatureScreen
-            ref={ref2}
-            style={{ width: width - 25, height: 200 }}
-            onOK={(signature) => handleOK(signature, 'signature_1')}
-            autoClear={true}
-            webStyle={style}
-            backgroundColor={'lightgray'}
-          />
+          {booking?.signature_1 ? (
+            <Image
+              source={{
+                uri: `https://staging.glassassistuk.co.uk/files/Signatures/${booking?.signature_1}`,
+              }}
+              style={{
+                width: '100%',
+                height: 300,
+              }}
+            />
+          ) : (
+            <View>
+              <SignatureScreen
+                ref={ref2}
+                style={{ width: width - 25, height: 200 }}
+                onOK={(signature) => handleOK(signature, 'signature_1')}
+                autoClear={true}
+                webStyle={style}
+                backgroundColor={'lightgray'}
+              />
 
-          <View style={styles.row}>
-            <Button
-              mode="contained"
-              style={styles.saveButton}
-              loading={isLoading}
-              onPress={() => ref2.current?.readSignature()}
-            >
-              Save Signature
-            </Button>
+              <View style={styles.row}>
+                <Button
+                  mode="contained"
+                  style={styles.saveButton}
+                  loading={isLoading}
+                  onPress={() => ref2.current?.readSignature()}
+                >
+                  Save Signature
+                </Button>
 
-            <Button
-              mode="outline"
-              loading={isLoading}
-              onPress={() => ref2.current?.clearSignature()}
-            >
-              Clear
-            </Button>
-          </View>
+                <Button
+                  mode="outline"
+                  loading={isLoading}
+                  onPress={() => ref2.current?.clearSignature()}
+                >
+                  Clear
+                </Button>
+              </View>
+            </View>
+          )}
 
           <List.Item
             title="Completion Date/Time"
