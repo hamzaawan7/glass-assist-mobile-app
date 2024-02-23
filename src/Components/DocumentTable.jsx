@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native'
-import { DataTable, Text } from 'react-native-paper';
+import { DataTable, Text, Button } from 'react-native-paper';
 
 const Document = ({ items }) => {
   const [page, setPage] = React.useState(0);
@@ -28,8 +28,12 @@ const Document = ({ items }) => {
         items.slice(from, to).map((item) => (
           <DataTable.Row key={item.key}>
             <DataTable.Cell>{item.name}</DataTable.Cell>
-            <DataTable.Cell numeric>{item.calories}</DataTable.Cell>
-            <DataTable.Cell numeric>{item.fat}</DataTable.Cell>
+            <DataTable.Cell numeric>{item.date}</DataTable.Cell>
+            <DataTable.Cell numeric>
+              <Button icon="trash" mode="contained" onPress={() => console.log('Pressed')}>
+                Press me
+              </Button>
+            </DataTable.Cell>
           </DataTable.Row>
         ))
       ) : (

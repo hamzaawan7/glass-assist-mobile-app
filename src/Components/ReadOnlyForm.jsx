@@ -70,6 +70,47 @@ export default function (booking) {
 
       <List.Section style={{ paddingHorizontal: 10 }}>
         <List.Accordion title="Details">
+          <Text style={[styles.text, { marginTop: 10 }]}>Customer & Job Location</Text>
+
+          <List.Item
+            title="Business:"
+            value={booking?.customer?.business}
+          />
+
+          <List.Item
+            title="Name:"
+            value={booking?.customer?.first_name}
+          />
+
+          <List.Item
+            title="Job Location:"
+            value={`${booking?.job_location?.address_1} ${booking?.job_location?.address_2}`}
+          />
+
+          <List.Item
+            title="Postcode:"
+            value={booking?.job_location?.postcode}
+          />
+
+          <List.Item
+            title="Phone No:"
+            value={booking?.customer?.phone}
+          />
+
+          <List.Item
+            title="Mobile Phone:"
+            value={booking?.customer?.mobile}
+          />
+
+          <List.Item
+            title="Order Number:"
+            value={booking?.order_number}
+          />
+        </List.Accordion>
+      </List.Section>
+
+      <List.Section style={{ paddingHorizontal: 10 }}>
+        <List.Accordion title="Details">
           <List.Item
             title="Ref Caller Name"
             description={booking?.ref_caller_name}
@@ -94,21 +135,6 @@ export default function (booking) {
           <TextLabel
             label="Title"
             value={booking?.customer?.title}
-          />
-
-          <TextLabel
-            label="Business"
-            value={booking?.customer?.business}
-          />
-
-          <TextLabel
-            label="First Name"
-            value={booking?.customer?.first_name}
-          />
-
-          <TextLabel
-            label="Surname"
-            value={booking?.customer?.surname}
           />
         </Card.Content>
       </Card>
@@ -172,13 +198,6 @@ export default function (booking) {
       </Card>
 
       <Card style={{ marginTop: 15 }}>
-        <TextLabel
-          label="Customer Order No"
-          value={booking?.order_number}
-        />
-      </Card>
-
-      <Card style={{ marginTop: 15 }}>
         <Card.Title title="JOB SUB CONTRACTOR DETAILS" />
 
         <Card.Content>
@@ -239,16 +258,6 @@ export default function (booking) {
           />
 
           <TextLabel
-            label="Phone"
-            value={booking?.customer?.phone}
-          />
-
-          <TextLabel
-            label="Mobile Phone"
-            value={booking?.customer?.mobile}
-          />
-
-          <TextLabel
             label="Email"
             value={booking?.customer?.email}
           />
@@ -259,25 +268,12 @@ export default function (booking) {
         <Card.Title title="Job Location" />
 
         <Card.Content>
-          <TextLabel
-            label="Address Line 1"
-            value={booking?.job_location?.address_1}
-          />
 
-          <TextLabel
-            label="Address Line 2"
-            value={booking?.job_location?.address_2}
-          />
 
 
           <TextLabel
             label="City"
             value={booking?.job_location?.city}
-          />
-
-          <TextLabel
-            label="Postcode"
-            value={booking?.job_location?.postcode}
           />
 
           <TextLabel
