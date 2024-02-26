@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState, useEffect } from 'react'
 import { Dimensions, StyleSheet, View, ActivityIndicator, Platform, Image } from 'react-native'
 import { TextInput, Text, Button, Checkbox, List } from "react-native-paper";
 
@@ -67,12 +67,20 @@ export default function (booking) {
   const [jobNotCompleted, setJobNotCompleted] = useState(booking?.job_not_completed);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [documents, setDocuments] = useState([]);
+  const [preDocuments, setPreDocuments] = useState([]);
+  const [postDocuments, setPostDocuments] = useState([]);
 
   const ref = useRef();
   const ref2 = useRef();
 
   const style = `.m-signature-pad--footer {display: none; margin: 0px;}`;
+
+  useEffect(() => {
+    if (booking && booking.documents) {
+      setPreDocuments(booking.documents?.filter((doc) => doc.type === 'pre'));
+      setPostDocuments(booking.documents?.filter((doc) => doc.type === 'post'));
+    }
+  }, [booking]);
 
   const handleOK = (signature, field) => {
     setIsLoading(true);
@@ -164,7 +172,7 @@ export default function (booking) {
     }
   }
 
-  const uploadFile = useCallback(async (uri) => {
+  const uploadFile = useCallback(async (uri, docType) => {
     const filename = uri.substring(uri.lastIndexOf('/') + 1)
     const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
 
@@ -174,6 +182,7 @@ export default function (booking) {
     const formData = new FormData();
     formData.append('image', { uri: uploadUri, name: filename, type });
     formData.append('name', 'document');
+    formData.append('type', docType);
 
     try {
       const res = await instance.post(
@@ -188,9 +197,13 @@ export default function (booking) {
 
       const { data, success } = res.data;
 
-      setDocuments((prev) => [...prev, data]);
-
       if (success) {
+        if (docType === 'pre') {
+          setPreDocuments((prev) => [...prev, data]);
+        } else {
+          setPostDocuments((prev) => [...prev, data]);
+        }
+
         Toast.show(`Uploaded successfully`, {
           duration: Toast.durations.LONG,
         });
@@ -224,7 +237,7 @@ export default function (booking) {
                 const document = await DocumentPicker.getDocumentAsync();
 
                 if (document.type !== 'cancel') {
-                  await uploadFile(document.uri)
+                  await uploadFile(document.uri, 'pre')
                 }
               } catch (error) {
                 console.log(error)
@@ -240,16 +253,14 @@ export default function (booking) {
               });
 
               if (!result.canceled) {
-                setIsLoading(true);
-
                 const uri = result.assets[0].uri;
 
-                await uploadFile(uri);
+                await uploadFile(uri, 'pre');
               }
             }}>Take Picture</Button>
           </View>
 
-          <Document items={documents} />
+          <Document items={preDocuments} />
         </List.Accordion>
       </List.Section>
 
@@ -355,7 +366,7 @@ export default function (booking) {
                 const document = await DocumentPicker.getDocumentAsync();
 
                 if (document.type !== 'cancel') {
-                  await uploadFile(document.uri)
+                  await uploadFile(document.uri, 'post')
                 }
               } catch (error) {
                 console.log(error)
@@ -371,16 +382,14 @@ export default function (booking) {
               });
 
               if (!result.canceled) {
-                setIsLoading(true);
-
                 const uri = result.assets[0].uri;
 
-                await uploadFile(uri);
+                await uploadFile(uri, 'post');
               }
             }}>Take Picture</Button>
           </View>
 
-          <Document items={documents} />
+          <Document items={postDocuments} />
         </List.Accordion>
       </List.Section>
 

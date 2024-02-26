@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { View } from 'react-native'
-import { DataTable, Text, Button } from 'react-native-paper';
+
+import { DataTable, Text } from 'react-native-paper';
+import { format } from 'date-fns'
+import { Feather } from '@expo/vector-icons';
 
 const Document = ({ items }) => {
   const [page, setPage] = React.useState(0);
@@ -28,11 +31,9 @@ const Document = ({ items }) => {
         items.slice(from, to).map((item) => (
           <DataTable.Row key={item.key}>
             <DataTable.Cell>{item.name}</DataTable.Cell>
-            <DataTable.Cell numeric>{item.date}</DataTable.Cell>
+            <DataTable.Cell numeric>{format(item.date_added, 'dd-MM-yyyy')}</DataTable.Cell>
             <DataTable.Cell numeric>
-              <Button icon="trash" mode="contained" onPress={() => console.log('Pressed')}>
-                Press me
-              </Button>
+              <Feather name='trash' size={14} color='red' onPress={() => console.log('Pressed')} />
             </DataTable.Cell>
           </DataTable.Row>
         ))

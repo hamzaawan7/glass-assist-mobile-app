@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { View } from "react-native";
-import { Text, Card, List } from "react-native-paper";
+
+import { Text, List } from "react-native-paper";
+import { format, isValid } from 'date-fns'
 
 import styles from '../screens/Tech/style';
-import TextLabel from './TextLabel'
 
 const status = [
   {
@@ -29,6 +30,15 @@ const status = [
 ];
 
 export default function (booking) {
+  const formatDate = useCallback((date) => {
+    if (date && isValid(date)) {
+      return format(date, 'dd-MM-yyyy');
+    }
+
+    return '';
+  }, [booking])
+
+
   return (
     <View>
       <View style={{ marginHorizontal: 10 }}>
@@ -38,7 +48,7 @@ export default function (booking) {
         />
 
         <List.Item
-          title={props => <Text {...props}>{booking.datetime}</Text>}
+          title={props => <Text {...props}>{formatDate(booking.datetime)}</Text>}
           left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
         />
 
@@ -53,7 +63,7 @@ export default function (booking) {
         />
 
         <List.Item
-          title={props => <Text {...props}>{booking?.date_added}</Text>}
+          title={props => <Text {...props}>{formatDate(booking.date_added)}</Text>}
           left={props => <Text {...props} style={styles.text}>Added On:</Text>}
         />
 
@@ -63,7 +73,7 @@ export default function (booking) {
         />
 
         <List.Item
-          title={props => <Text {...props}>{booking?.date_updated}</Text>}
+          title={props => <Text {...props}>{formatDate(booking?.date_updated)}</Text>}
           left={props => <Text {...props} style={styles.text}>Updated On:</Text>}
         />
       </View>

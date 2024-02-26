@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import { ActivityIndicator, FlatList, View, Alert } from "react-native";
 
 import { Button, Divider, List, Text, Badge } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-root-toast";
 import { FontAwesome, FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
+import NetInfo from '@react-native-community/netinfo';
 
 import styles from "./style";
 
@@ -29,6 +30,12 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     setIsLoading(true);
+
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (!state.isConnected) {
+        Alert.alert('Problem while connecting to internet');
+      }
+    });
 
     (async () => {
       try {
@@ -68,18 +75,9 @@ const Home = ({ navigation }) => {
         });
       }
     })();
-  }, []);
 
-  function formatAMPM(date) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return strTime;
-  }
+    return unsubscribe();
+  }, []);
 
   if (isLoading) {
     return (
