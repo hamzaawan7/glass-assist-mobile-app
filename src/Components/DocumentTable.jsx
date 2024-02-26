@@ -45,12 +45,16 @@ const Document = ({ items: initialItems }) => {
               `/api/booking/delete-document/${id}`,
             );
 
-            const { type } = res.data;
+            const { type, message } = res.data;
             setIsLoading(false);
 
             if (type === 'success') {
               setItems((prev) => prev.filter((doc) => doc.id !== id))
-              Toast.show('Document deleted successfully');
+              Toast.show(message);
+            } else {
+              Toast.show(message, {
+                textColor: 'red'
+              })
             }
           } catch (error) {
             setIsLoading(false);
