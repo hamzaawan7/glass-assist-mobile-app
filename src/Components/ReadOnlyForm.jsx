@@ -31,13 +31,14 @@ const status = [
 
 export default function (booking) {
   const formatDate = useCallback((date) => {
-    if (date && isValid(date)) {
+    const newDate = new Date(date);
+
+    if (newDate && isValid(newDate)) {
       return format(date, 'dd-MM-yyyy');
     }
 
     return '';
-  }, [booking])
-
+  }, [booking]);
 
   return (
     <View>
@@ -48,7 +49,7 @@ export default function (booking) {
         />
 
         <List.Item
-          title={props => <Text {...props}>{formatDate(booking.datetime)}</Text>}
+          title={props => <Text {...props}>{booking ? formatDate(booking.datetime) : ''}</Text>}
           left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
         />
 
