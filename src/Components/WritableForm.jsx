@@ -17,6 +17,10 @@ const { width } = Dimensions.get('screen');
 
 const paymentType = [
   {
+    id: '',
+    name: 'Select Payment Type',
+  },
+  {
     id: 'card',
     name: 'Card'
   },
