@@ -57,7 +57,9 @@ const reasons = [
   },
 ]
 
-export default function (booking) {
+export default function (initialBooking) {
+  const [booking, setBooking] = useState(initialBooking);
+
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
   const [preCName, setPreCName] = useState(booking?.pre_c_name);
   const [jobSignOff, setJobSignOff] = useState(booking?.job_complete)
@@ -118,9 +120,14 @@ export default function (booking) {
             }
           );
 
-          const { success } = res.data;
+          const { success, data } = res.data;
 
           if (success) {
+            setBooking((prev) => ({
+              ...prev,
+              [field]: data[field]
+            }));
+
             Toast.show(`Saved successfully`, {
               duration: Toast.durations.LONG,
             });

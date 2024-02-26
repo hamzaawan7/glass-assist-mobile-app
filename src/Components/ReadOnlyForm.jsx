@@ -28,6 +28,26 @@ export default memo(function (booking) {
       id: 5,
       name: 'Awaiting Parts'
     },
+    {
+      id: 6,
+      name: 'Priority'
+    },
+    {
+      id: 7,
+      name: 'Invoiced'
+    },
+    {
+      id: 8,
+      name: 'Canceled'
+    },
+    {
+      id: 9,
+      name: 'Quote'
+    },
+    {
+      id: 10,
+      name: 'Completed'
+    },
   ], []);
 
   const formatDate = useCallback((date) => {
