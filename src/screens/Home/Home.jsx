@@ -6,7 +6,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-root-toast";
 import { FontAwesome, FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
-import NetInfo from '@react-native-community/netinfo';
 
 import styles from "./style";
 
@@ -30,14 +29,6 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     setIsLoading(true);
-
-    const unsubscribe = NetInfo.addEventListener(state => {
-      if (!state.isConnected) {
-        Toast.show('Problem while connecting to internet', {
-          textColor: 'red'
-        });
-      }
-    });
 
     (async () => {
       try {
@@ -78,7 +69,6 @@ const Home = ({ navigation }) => {
       }
     })();
 
-    return unsubscribe();
   }, []);
 
   if (isLoading) {
