@@ -54,6 +54,15 @@ const Login = ({ navigation }) => {
       return;
     }
 
+    const state = await NetInfo.fetch();
+
+    if (!state.isConnected) {
+      Toast.show('Problem while connecting to internet', {
+        textColor: 'red'
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
