@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, memo, useMemo } from "react";
 import { View } from "react-native";
 
 import { Text, List } from "react-native-paper";
@@ -6,30 +6,30 @@ import { format, isValid } from 'date-fns'
 
 import styles from '../screens/Tech/style';
 
-const status = [
-  {
-    id: 1,
-    name: 'Pending'
-  },
-  {
-    id: 2,
-    name: 'In Progress'
-  },
-  {
-    id: 3,
-    name: 'Job Completed'
-  },
-  {
-    id: 4,
-    name: 'Awaiting Auth'
-  },
-  {
-    id: 5,
-    name: 'Awaiting Parts'
-  },
-];
+export default memo(function (booking) {
+  const status = useMemo(() => [
+    {
+      id: 1,
+      name: 'Pending'
+    },
+    {
+      id: 2,
+      name: 'In Progress'
+    },
+    {
+      id: 3,
+      name: 'Job Completed'
+    },
+    {
+      id: 4,
+      name: 'Awaiting Auth'
+    },
+    {
+      id: 5,
+      name: 'Awaiting Parts'
+    },
+  ], []);
 
-export default function (booking) {
   const formatDate = useCallback((date) => {
     const newDate = new Date(date);
 
@@ -49,7 +49,7 @@ export default function (booking) {
         />
 
         <List.Item
-          title={props => <Text {...props}>{booking ? formatDate(booking.datetime) : ''}</Text>}
+          title={props => <Text {...props}>{formatDate(booking?.datetime)}</Text>}
           left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
         />
 
@@ -171,4 +171,4 @@ export default function (booking) {
       </List.Section>
     </View>
   );
-};
+});
