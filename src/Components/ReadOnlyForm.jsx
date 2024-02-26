@@ -34,7 +34,7 @@ export default function (booking) {
     const newDate = new Date(date);
 
     if (newDate && isValid(newDate)) {
-      return format(date, 'dd-MM-yyyy');
+      return format(newDate, 'dd-MM-yyyy');
     }
 
     return '';
