@@ -27,7 +27,7 @@ const Document = ({ items: initialItems }) => {
     setPage(0);
   }, [itemsPerPage]);
 
-  const deleteDocument = React.useCallback(async (id) => {
+  const deleteDocument = React.useCallback((id) => {
 
     Alert.alert('Delete Action', 'Are you sure you want to delete?', [
       {
@@ -111,7 +111,7 @@ const Document = ({ items: initialItems }) => {
             <DataTable.Cell>{item.name}</DataTable.Cell>
             <DataTable.Cell numeric>{format(item.date_added, 'dd-MM-yyyy')}</DataTable.Cell>
             <DataTable.Cell numeric>
-              <Feather name='trash' size={14} color='red' onPress={async () => await deleteDocument(item.id)} />
+              <Feather name='trash' size={14} color='red' onPress={() => deleteDocument(item.id)} />
             </DataTable.Cell>
           </DataTable.Row>
         ))
