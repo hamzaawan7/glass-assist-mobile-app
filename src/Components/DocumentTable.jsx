@@ -41,7 +41,6 @@ const Document = ({ items }) => {
 
       const { message } = error.response?.data;
 
-      setIsLoading(false);
       Toast.show(message ? message : 'Something went wrong.', {
         duration: Toast.durations.LONG,
         textColor: 'red'
