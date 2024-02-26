@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View, Alert } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 
 import { Button, Divider, List, Text, Badge } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -33,7 +33,9 @@ const Home = ({ navigation }) => {
 
     const unsubscribe = NetInfo.addEventListener(state => {
       if (!state.isConnected) {
-        Alert.alert('Problem while connecting to internet');
+        Toast.show('Problem while connecting to internet', {
+          textColor: 'red'
+        });
       }
     });
 
