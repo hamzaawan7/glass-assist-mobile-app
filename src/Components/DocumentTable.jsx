@@ -6,6 +6,8 @@ import { format } from 'date-fns'
 import { Feather } from '@expo/vector-icons';
 import Toast from 'react-native-root-toast';
 
+import instance from '../api/axios';
+
 const Document = ({ items }) => {
   const [page, setPage] = React.useState(0);
   const [numberOfItemsPerPageList] = React.useState([2, 3, 4]);
@@ -46,7 +48,7 @@ const Document = ({ items }) => {
         textColor: 'red'
       });
     }
-  });
+  }, []);
 
   if (isLoading) {
     return (
