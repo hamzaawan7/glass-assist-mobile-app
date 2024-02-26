@@ -43,7 +43,7 @@ const Document = ({ items }) => {
 
       const { message } = error.response?.data;
 
-      Toast.show(message ? message : 'Something went wrong.', {
+      Toast.show(message ?? 'Something went wrong.', {
         duration: Toast.durations.LONG,
         textColor: 'red'
       });
