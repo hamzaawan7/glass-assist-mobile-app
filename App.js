@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { ThemeProvider } from "react-native-paper";
+import { ThemeProvider, Provider as PaperProvider } from "react-native-paper";
 import { RootSiblingParent } from "react-native-root-siblings";
 import NetInfo from '@react-native-community/netinfo';
 
@@ -26,12 +26,14 @@ export default function App() {
 
 
   return (
-    <ThemeProvider>
-      <RootSiblingParent>
-        <NavigationContainer>
-          <Stack />
-        </NavigationContainer>
-      </RootSiblingParent>
-    </ThemeProvider>
+    <PaperProvider>
+      <ThemeProvider>
+        <RootSiblingParent>
+          <NavigationContainer>
+            <Stack />
+          </NavigationContainer>
+        </RootSiblingParent>
+      </ThemeProvider>
+    </PaperProvider>
   );
 }

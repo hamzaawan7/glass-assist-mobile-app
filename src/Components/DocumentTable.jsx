@@ -10,7 +10,7 @@ import instance from '../api/axios';
 
 const Document = ({ items }) => {
   const [page, setPage] = React.useState(0);
-  const [numberOfItemsPerPageList] = React.useState([2, 3, 4]);
+  const [numberOfItemsPerPageList] = React.useState([2, 5, 10]);
   const [itemsPerPage, onItemsPerPageChange] = React.useState(
     numberOfItemsPerPageList[0]
   );
