@@ -230,8 +230,8 @@ export default function (booking) {
   return (
     <View style={styles.container}>
       <List.Section style={{ paddingHorizontal: 10 }}>
-        <List.Accordion title="Documents">
-          <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between' }}>
+        <List.Accordion title="Pre Installation Documents">
+          <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', marginTop: 10 }}>
             <Button onPress={async () => {
               try {
                 const document = await DocumentPicker.getDocumentAsync();
@@ -360,7 +360,7 @@ export default function (booking) {
 
       <List.Section style={{ paddingHorizontal: 10 }}>
         <List.Accordion title="Post Installation Documents">
-          <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', marginTop: 10 }}>
             <Button onPress={async () => {
               try {
                 const document = await DocumentPicker.getDocumentAsync();
