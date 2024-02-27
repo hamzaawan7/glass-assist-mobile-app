@@ -30,38 +30,44 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     setIsLoading(true);
 
-    (async () => {
-      try {
-        const user = await AsyncStorage.getItem("user");
-
-        if (user) {
-          setUser(JSON.parse(user));
-        }
-
-        const res = await instance.get(`/api/bookings`);
-        const { data, success } = res.data;
-
-        if (success) {
-          setBookings(data);
-        }
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error.response?.data);
-
-        const { message } = error.response?.data;
-
-        setIsLoading(false);
-        Toast.show(message ? message : 'Something went wrong.', {
-          duration: Toast.durations.LONG,
-        });
-      }
-    })();
-
+    getBookings();
   }, []);
 
-  const onRefresh = useCallback(() => {
+  const getBookings = useCallback(async () => {
+    setRefreshing(true);
 
+    getBookings();
+  }, []);
+
+  const onRefresh = useCallback(async () => {
+    try {
+      const user = await AsyncStorage.getItem("user");
+
+      if (user) {
+        setUser(JSON.parse(user));
+      }
+
+      const res = await instance.get(`/api/bookings`);
+      const { data, success } = res.data;
+
+      if (success) {
+        setBookings(data);
+      }
+
+      setRefreshing(false);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error.response?.data);
+
+      const { message } = error.response?.data;
+
+      setRefreshing(false);
+      setIsLoading(false);
+
+      Toast.show(message ? message : 'Something went wrong.', {
+        duration: Toast.durations.LONG,
+      });
+    }
   });
 
   const getCarName = (vehicle) => {
