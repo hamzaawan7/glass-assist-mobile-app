@@ -3,7 +3,6 @@ import { ActivityIndicator, FlatList, View } from "react-native";
 
 import { Button, Divider, List, Text, Badge } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-root-toast";
 import { FontAwesome, FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
 
@@ -92,7 +91,7 @@ const Home = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.dateContainer}>
         <Text style={styles.dateText}>
           SHOWING APPOINTMENTS FOR {date.toLocaleDateString()}
@@ -199,7 +198,7 @@ const Home = ({ navigation }) => {
           );
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
