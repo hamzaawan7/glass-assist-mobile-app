@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { ActivityIndicator, FlatList, View, RefreshControl } from "react-native";
 
 import { Button, Divider, List, Text, Badge } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,6 +14,7 @@ const Home = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [user, setUser] = useState();
+  const [refreshing, setRefreshing] = useState(false);
 
   const date = new Date(Date.now());
   const days = [
@@ -59,13 +60,9 @@ const Home = ({ navigation }) => {
 
   }, []);
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-    );
-  }
+  const onRefresh = useCallback(() => {
+
+  });
 
   const getCarName = (vehicle) => {
     let name = '';
@@ -90,6 +87,14 @@ const Home = ({ navigation }) => {
     navigation.navigate('Login');
   };
 
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.dateContainer}>
@@ -113,13 +118,15 @@ const Home = ({ navigation }) => {
         data={bookings}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <Divider />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         ListEmptyComponent={() => (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>No jobs for today...</Text>
           </View>
         )}
         renderItem={({ item }) => {
-
           return (
             <List.Item
               onPress={() => navigation.navigate("Tech", {

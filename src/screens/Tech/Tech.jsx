@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { KeyboardAvoidingView, ActivityIndicator, ScrollView, View } from "react-native";
+import React, { useState, useCallback } from "react";
+import { KeyboardAvoidingView, ActivityIndicator, ScrollView, View, RefreshControl } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
 
 import ReadOnlyForm from "../../Components/ReadOnlyForm";
@@ -16,44 +16,46 @@ const Tech = ({ route }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [booking, setBooking] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
 
-    (async () => {
-      try {
-        const token = await AsyncStorage.getItem("access_token");
+      getBooking();
+    }, [id])
+  );
 
-        if (token) {
-          instance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
 
-          const res = await instance.get(`/api/booking/${id}`);
-          const { data, success } = res.data;
+    getBooking();
+  }, [id]);
 
-          if (success) {
-            setBooking(data[0]);
-          }
-        } else {
-          Toast.show('Please login again...', {
-            duration: Toast.durations.LONG,
-          });
+  const getBooking = useCallback(async () => {
+    try {
+      const res = await instance.get(`/api/booking/${id}`);
+      const { data, success } = res.data;
 
-          navigation.navigate('Login');
-        }
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error.response?.data);
-
-        const { message } = error.response?.data;
-
-        setIsLoading(false);
-        Toast.show(message ? message : 'Something went wrong.', {
-          duration: Toast.durations.LONG,
-        });
+      if (success) {
+        setBooking(data?.find((book) => book.id === id));
       }
-    })();
-  }, []);
+
+      setRefreshing(false);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error.response?.data);
+
+      const { message } = error.response?.data;
+
+      setRefreshing(false);
+      setIsLoading(false);
+
+      Toast.show(message ? message : 'Something went wrong.', {
+        duration: Toast.durations.LONG,
+      });
+    }
+  }, [id, instance])
 
   if (isLoading) {
     return (
@@ -65,7 +67,9 @@ const Tech = ({ route }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <ScrollView>
+      <ScrollView refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
         <ReadOnlyForm {...booking} />
 
         <WritableForm {...booking} />

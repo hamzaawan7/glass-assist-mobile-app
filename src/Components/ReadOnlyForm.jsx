@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { View } from "react-native";
 
 import { Text, List } from "react-native-paper";
@@ -6,7 +6,7 @@ import { format, isValid } from 'date-fns'
 
 import styles from '../screens/Tech/style';
 
-export default memo(function (booking) {
+export default function (booking) {
   const status = useMemo(() => [
     {
       id: 1,
@@ -191,4 +191,4 @@ export default memo(function (booking) {
       </List.Section>
     </View>
   );
-});
+}
