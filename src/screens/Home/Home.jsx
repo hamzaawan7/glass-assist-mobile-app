@@ -41,13 +41,13 @@ const Home = ({ navigation }) => {
     getBookings();
   }, []);
 
-  const getBookings = useCallback(async () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
 
     getBookings();
   }, []);
 
-  const onRefresh = useCallback(async () => {
+  const getBookings = useCallback(async () => {
     try {
       const res = await instance.get(`/api/bookings`);
       const { data, success } = res.data;
