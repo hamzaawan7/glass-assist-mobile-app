@@ -32,28 +32,17 @@ const Home = ({ navigation }) => {
 
     (async () => {
       try {
-        const token = await AsyncStorage.getItem("access_token");
         const user = await AsyncStorage.getItem("user");
 
         if (user) {
           setUser(JSON.parse(user));
         }
 
-        if (token) {
-          instance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+        const res = await instance.get(`/api/bookings`);
+        const { data, success } = res.data;
 
-          const res = await instance.get(`/api/bookings`);
-          const { data, success } = res.data;
-
-          if (success) {
-            setBookings(data);
-          }
-        } else {
-          Toast.show('Please login again...', {
-            duration: Toast.durations.LONG,
-          });
-
-          navigation.navigate('Login');
+        if (success) {
+          setBookings(data);
         }
 
         setIsLoading(false);

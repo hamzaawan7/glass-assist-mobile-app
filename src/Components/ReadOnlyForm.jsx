@@ -115,7 +115,7 @@ export default memo(function (booking) {
 
           <List.Item
             title="Job Location:"
-            description={`${booking?.job_location?.address_1 || ''} ${booking?.job_location?.address_2 || ''}`}
+            description={`${booking?.job_location?.address_line_1 || ''} ${booking?.job_location?.address_line_2 || ''} ${booking?.job_location?.city || ''} ${booking?.job_location?.county || ''}`}
           />
 
           <List.Item

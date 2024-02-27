@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 
 import { Button, TextInput } from "react-native-paper";
@@ -18,27 +18,6 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSecure, setIsSecure] = useState(true);
-
-  useLayoutEffect(() => {
-    const unsubscribe = navigation.addListener('focus', async () => {
-      setIsLoading(true);
-
-      try {
-        const token = await AsyncStorage.getItem("access_token");
-
-        setIsLoading(false);
-
-        if (token) {
-          navigation.navigate('Home');
-        }
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    });
-
-    return unsubscribe;
-  }, [navigation]);
 
   const handleSubmit = async () => {
     if (!email) {
