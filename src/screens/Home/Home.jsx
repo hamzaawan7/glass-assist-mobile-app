@@ -30,6 +30,14 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     setIsLoading(true);
 
+    (async () => {
+      const user = await AsyncStorage.getItem("user");
+
+      if (user) {
+        setUser(JSON.parse(user));
+      }
+    })()
+
     getBookings();
   }, []);
 
@@ -41,12 +49,6 @@ const Home = ({ navigation }) => {
 
   const onRefresh = useCallback(async () => {
     try {
-      const user = await AsyncStorage.getItem("user");
-
-      if (user) {
-        setUser(JSON.parse(user));
-      }
-
       const res = await instance.get(`/api/bookings`);
       const { data, success } = res.data;
 
