@@ -3,6 +3,8 @@ import { KeyboardAvoidingView, ActivityIndicator, ScrollView, View, RefreshContr
 import { useFocusEffect } from '@react-navigation/native';
 
 import Toast from "react-native-root-toast";
+import NetInfo from '@react-native-community/netinfo';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import ReadOnlyForm from "../../Components/ReadOnlyForm";
 import WritableForm from "../../Components/WritableForm";
@@ -33,27 +35,61 @@ const Tech = ({ route }) => {
   }, [id]);
 
   const getBooking = useCallback(async () => {
-    try {
-      const res = await instance.get(`/api/booking/${id}`);
-      const { data, success } = res.data;
+    const { isConnected } = await NetInfo.fetch();
 
-      if (success) {
-        setBooking(data?.find((book) => book.id === id));
+    if (isConnected) {
+      try {
+        const res = await instance.get(`/api/booking/${id}`);
+        const { data, success } = res.data;
+
+        if (success) {
+          const currentBooking = data?.find((book) => book.id === id);
+
+          await AsyncStorage.setItem(`booking.${id}`, JSON.stringify(currentBooking));
+
+          setBooking(currentBooking);
+        }
+
+        setRefreshing(false);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error.response?.data);
+
+        const { message } = error.response?.data;
+
+        setRefreshing(false);
+        setIsLoading(false);
+
+        Toast.show(message ? message : 'Something went wrong.', {
+          duration: Toast.durations.LONG,
+        });
+      }
+    } else {
+      try {
+        const offlineBooking = await AsyncStorage.getItem(`booking.${id}`);
+
+        if (offlineBooking) {
+          setBooking(JSON.parse(offlineBooking));
+        }
+      } catch (error) {
+        console.error(error);
+
+        let message = '';
+
+        if (typeof error === 'string') {
+          message = error;
+        } else {
+          message = 'Unexpected error'
+        }
+
+        Toast.show(message, {
+          duration: Toast.durations.LONG,
+          textColor: 'red'
+        })
       }
 
       setRefreshing(false);
       setIsLoading(false);
-    } catch (error) {
-      console.error(error.response?.data);
-
-      const { message } = error.response?.data;
-
-      setRefreshing(false);
-      setIsLoading(false);
-
-      Toast.show(message ? message : 'Something went wrong.', {
-        duration: Toast.durations.LONG,
-      });
     }
   }, [id, instance])
 
