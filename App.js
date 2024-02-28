@@ -53,11 +53,39 @@ export default function App() {
     setIsLoading(true);
     checkStatusAsync();
 
-    const unsubscribe = NetInfo.addEventListener(state => {
+    const unsubscribe = NetInfo.addEventListener(async state => {
       if (!state.isConnected) {
-        Toast.show('Problem while connecting to internet', {
-          textColor: 'red'
-        });
+        const updateBooking = await AsyncStorage.getItem(`update-booking`);
+
+        if (updateBooking) {
+          const request = JSON.parse(updateBooking);
+
+          try {
+            const res = await instance.put(
+              request.route,
+              request.payload
+            );
+
+            const { data, success } = res.data;
+            console.log(data);
+
+            if (success) {
+              Toast.show(`Saved successfully`, {
+                duration: Toast.durations.LONG,
+              });
+            }
+
+            setIsLoading(false);
+          } catch (error) {
+            console.error(error.response.data);
+            setIsLoading(false);
+            Toast.show(`${error.response.data?.message}`, {
+              duration: Toast.durations.LONG,
+            });
+          }
+
+          await AsyncStorage.removeItem(`update-booking`);
+        }
       }
     });
 

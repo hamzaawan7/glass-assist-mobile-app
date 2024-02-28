@@ -9,6 +9,8 @@ import Toast from 'react-native-root-toast';
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
+import NetInfo from '@react-native-community/netinfo';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import instance from '../api/axios';
 import Document from './DocumentTable';
@@ -146,40 +148,51 @@ export default function (initialBooking) {
   };
 
   const saveHandle = async () => {
-    try {
-      const res = await instance.put(
-        `/api/booking/update/${booking.id}`,
-        {
-          pre_check_notes: preCheckNotes,
-          pre_c_name: preCName,
-          pre_job_complete: preJobComplete,
-          job_complete: jobSignOff,
-          c_name: customerName,
-          payment_type: type,
-          technician_statement: techStatement,
-          batch_number: batchNumber,
-          tech_details: techDetails,
-          job_not_completed: jobNotCompleted,
-          technician_note: techNote,
+    const { isConnected } = await NetInfo.fetch();
+
+    const payload = {
+      pre_check_notes: preCheckNotes,
+      pre_c_name: preCName,
+      pre_job_complete: preJobComplete,
+      job_complete: jobSignOff,
+      c_name: customerName,
+      payment_type: type,
+      technician_statement: techStatement,
+      batch_number: batchNumber,
+      tech_details: techDetails,
+      job_not_completed: jobNotCompleted,
+      technician_note: techNote,
+    };
+
+    if (isConnected) {
+      try {
+        const res = await instance.put(
+          `/api/booking/update/${booking.id}`,
+          payload
+        );
+
+        const { data, success } = res.data;
+        console.log(data);
+
+        if (success) {
+          Toast.show(`Saved successfully`, {
+            duration: Toast.durations.LONG,
+          });
         }
-      );
 
-      const { data, success } = res.data;
-      console.log(data);
-
-      if (success) {
-        Toast.show(`Saved successfully`, {
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error.response.data);
+        setIsLoading(false);
+        Toast.show(`${error.response.data?.message}`, {
           duration: Toast.durations.LONG,
         });
       }
-
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error.response.data);
-      setIsLoading(false);
-      Toast.show(`${error.response.data?.message}`, {
-        duration: Toast.durations.LONG,
-      });
+    } else {
+      await AsyncStorage.setItem(`update-booking`, JSON.stringify({
+        route: `/api/booking/update/${booking.id}`,
+        payload
+      }));
     }
   }
 
