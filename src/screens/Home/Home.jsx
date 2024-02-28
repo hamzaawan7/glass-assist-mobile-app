@@ -5,6 +5,7 @@ import { Button, Divider, List, Text, Badge } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
 import { FontAwesome, FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
+import NetInfo from '@react-native-community/netinfo';
 
 import styles from "./style";
 
@@ -36,7 +37,7 @@ const Home = ({ navigation }) => {
       if (user) {
         setUser(JSON.parse(user));
       }
-    })()
+    })();
 
     getBookings();
   }, []);
@@ -48,29 +49,62 @@ const Home = ({ navigation }) => {
   }, []);
 
   const getBookings = useCallback(async () => {
-    try {
-      const res = await instance.get(`/api/bookings`);
-      const { data, success } = res.data;
+    const { isConnected } = await NetInfo.fetch();
 
-      if (success) {
-        setBookings(data);
+    if (isConnected) {
+      try {
+        const res = await instance.get(`/api/bookings`);
+        const { data, success } = res.data;
+
+        if (success) {
+          await AsyncStorage.setItem('bookings', JSON.stringify(data));
+          setBookings(data);
+        }
+
+        setRefreshing(false);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error.response?.data);
+
+        const { message } = error.response?.data;
+
+        setRefreshing(false);
+        setIsLoading(false);
+
+        Toast.show(message ? message : 'Something went wrong.', {
+          duration: Toast.durations.LONG,
+          textColor: 'red'
+        });
+      }
+    } else {
+      try {
+        const offlineBookings = await AsyncStorage.getItem('bookings');
+
+        if (offlineBookings) {
+          setBookings(JSON.parse(offlineBookings));
+        }
+      } catch (error) {
+        console.error(error);
+
+        let message = '';
+
+        if (typeof error === 'string') {
+          message = error;
+        } else {
+          message = 'Unexpected error'
+        }
+
+        Toast.show(message, {
+          duration: Toast.durations.LONG,
+          textColor: 'red'
+        })
       }
 
       setRefreshing(false);
       setIsLoading(false);
-    } catch (error) {
-      console.error(error.response?.data);
-
-      const { message } = error.response?.data;
-
-      setRefreshing(false);
-      setIsLoading(false);
-
-      Toast.show(message ? message : 'Something went wrong.', {
-        duration: Toast.durations.LONG,
-      });
     }
-  });
+
+  }, []);
 
   const getCarName = (vehicle) => {
     let name = '';
