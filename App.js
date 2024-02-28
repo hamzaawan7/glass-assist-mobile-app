@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, AppState } from 'react-native';
 
 import { ThemeProvider, Provider as PaperProvider } from "react-native-paper";
 import { RootSiblingParent } from "react-native-root-siblings";
@@ -47,6 +47,7 @@ async function unregisterBackgroundFetchAsync() {
 export default function App() {
   const [initialScreen, setInitialScreen] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   useLayoutEffect(() => {
     setIsLoading(true);
@@ -58,6 +59,23 @@ export default function App() {
           textColor: 'red'
         });
       }
+    });
+
+    const subscription = AppState.addEventListener('change', async nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        if (isRegistered) {
+          await unregisterBackgroundFetchAsync();
+        }
+      } else {
+        await registerBackgroundFetchAsync();
+      }
+
+      appState.current = nextAppState;
+      checkStatusAsync()
+      console.log('AppState', appState.current);
     });
 
     AsyncStorage.getItem("access_token")
@@ -81,24 +99,14 @@ export default function App() {
 
     return () => {
       unsubscribe();
+      subscription.remove();
     }
   }, [initialScreen]);
 
   const checkStatusAsync = async () => {
-    const status = await BackgroundFetch.getStatusAsync();
+    console.log('[STATUS]: ', await BackgroundFetch.getStatusAsync());
     const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
-    console.log(status);
-    console.log(isRegistered);
-  };
-
-  const toggleFetchTask = async () => {
-    if (isRegistered) {
-      await unregisterBackgroundFetchAsync();
-    } else {
-      await registerBackgroundFetchAsync();
-    }
-
-    checkStatusAsync();
+    setIsRegistered(isRegistered);
   };
 
   if (isLoading) {
