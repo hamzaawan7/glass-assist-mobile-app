@@ -62,6 +62,7 @@ const Tech = ({ route }) => {
 
         Toast.show(message ? message : 'Something went wrong.', {
           duration: Toast.durations.LONG,
+          textColor: 'red'
         });
       }
     } else {
