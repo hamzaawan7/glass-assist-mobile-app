@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { View } from "react-native";
 
 import { Text, List } from "react-native-paper";
@@ -49,16 +49,6 @@ export default function (booking) {
       name: 'Completed'
     },
   ], []);
-
-  const formatDate = useCallback((date) => {
-    const newDate = new Date(date);
-
-    if (newDate && isValid(newDate)) {
-      return format(newDate, 'dd-MM-yyyy');
-    }
-
-    return '';
-  }, []);
 
   return (
     <View>
