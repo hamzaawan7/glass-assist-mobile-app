@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, ActivityIndicator } from "react-native";
+import { Text, View, ActivityIndicator, Image } from "react-native";
 
 import { Button, TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/FontAwesome";
@@ -93,6 +93,10 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={{ alignItems: 'center' }}>
+        <Image source={require('../../assets/GA-logo-001.jpg')} />
+      </View>
+
       <Text style={styles.loginText}>Login</Text>
 
       <View style={styles.inputContainer}>
