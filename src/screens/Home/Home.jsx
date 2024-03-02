@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { ActivityIndicator, FlatList, View, RefreshControl } from "react-native";
 
 import { Button, Divider, List, Text, Badge } from "react-native-paper";
@@ -27,6 +27,49 @@ const Home = ({ navigation }) => {
     "Saturday",
     "Sunday",
   ];
+
+  const status = useMemo(() => [
+    {
+      id: 1,
+      name: 'Pending'
+    },
+    {
+      id: 2,
+      name: 'In Progress'
+    },
+    {
+      id: 3,
+      name: 'Job Completed'
+    },
+    {
+      id: 4,
+      name: 'Awaiting Auth'
+    },
+    {
+      id: 5,
+      name: 'Awaiting Parts'
+    },
+    {
+      id: 6,
+      name: 'Priority'
+    },
+    {
+      id: 7,
+      name: 'Invoiced'
+    },
+    {
+      id: 8,
+      name: 'Canceled'
+    },
+    {
+      id: 9,
+      name: 'Quote'
+    },
+    {
+      id: 10,
+      name: 'Completed'
+    },
+  ], []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -124,6 +167,22 @@ const Home = ({ navigation }) => {
     return name;
   }
 
+  const getStatusColor = useCallback((jobStatus) => {
+    if (jobStatus === 'Pending') {
+      return 'red';
+    }
+
+    if (jobStatus === 'In Progress') {
+      return 'orange';
+    }
+
+    if (jobStatus === 'Completed') {
+      return 'green';
+    }
+
+    return 'black';
+  }, [status]);
+
   const handleLogout = async () => {
     await AsyncStorage.clear();
     navigation.navigate('Login');
@@ -139,13 +198,13 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.dateContainer}>
-        <Text style={styles.dateText}>
-          SHOWING APPOINTMENTS FOR {date.toLocaleDateString()}
-        </Text>
+      <Text style={styles.companyText}>
+        Glass Assist UK Ltd
+      </Text>
 
-        <Text style={styles.dateText}>{days[date.getDay() - 1]}</Text>
-      </View>
+      <Text style={styles.dateText}>
+        {date.toLocaleDateString()}   {days[date.getDay() - 1]}
+      </Text>
 
       <Divider />
 
@@ -154,6 +213,7 @@ const Home = ({ navigation }) => {
       </Text>
 
       <Text style={styles.jobText}>Total Jobs: {bookings.length}</Text>
+
       <Button onPress={handleLogout}>Logout</Button>
 
       <FlatList
@@ -169,6 +229,8 @@ const Home = ({ navigation }) => {
           </View>
         )}
         renderItem={({ item }) => {
+          const jobStatus = status.find((s) => s.id == item.status);
+
           return (
             <List.Item
               onPress={() => navigation.navigate("Tech", {
@@ -237,10 +299,8 @@ const Home = ({ navigation }) => {
                 )
               }}
               right={() => (
-                <Text style={{ paddingHorizontal: 4 }}>
-                  {item?.job_type === 1 ? (
-                    <Badge>Business</Badge>
-                  ) : ('')}
+                <Text style={{ paddingHorizontal: 4, color: getStatusColor(jobStatus?.name) }}>
+                  {jobStatus?.name}
                 </Text>
               )}
             />

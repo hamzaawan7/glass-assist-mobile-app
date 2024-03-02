@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     horizontal: {
         flexDirection: 'row',
@@ -23,16 +23,23 @@ export default styles = StyleSheet.create({
         alignSelf: 'center',
         padding: 20,
     },
+    companyText: {
+        fontSize: 13,
+        marginTop: 2,
+        color: 'red',
+        textAlign: 'center',
+        fontWeight: 'bold',
+    },
     dateText: {
-        fontSize: 17,
-        marginTop: 10,
+        fontSize: 20,
+        marginVertical: 5,
         textAlign: 'center',
         fontWeight: 'bold',
     },
     jobText: {
-        marginTop: 20,
-        fontSize: 20,
-        paddingLeft: 15,
+        marginTop: 15,
+        fontSize: 17,
+        textAlign: 'center',
     },
     emptyContainer: {
         flex: 1,

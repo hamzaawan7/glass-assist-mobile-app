@@ -7,6 +7,7 @@ import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
+import { StatusBar } from 'expo-status-bar';
 
 import 'react-native-get-random-values'
 
@@ -147,6 +148,8 @@ export default function App() {
 
   return (
     <PaperProvider>
+      <StatusBar style="auto" backgroundColor="red" translucent={false} />
+
       <ThemeProvider>
         <RootSiblingParent>
           <Stack initialScreen={initialScreen} />
