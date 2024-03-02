@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { View } from "react-native";
 
 import { Text, List } from "react-native-paper";
-import { format, isValid } from 'date-fns'
 
 import styles from '../screens/Tech/style';
 
