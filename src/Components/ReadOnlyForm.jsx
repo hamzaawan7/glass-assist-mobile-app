@@ -69,33 +69,13 @@ export default function (booking) {
         />
 
         <List.Item
-          title={props => <Text {...props}>{formatDate(booking?.datetime)}</Text>}
+          title={props => <Text {...props}>{booking?.datetime}</Text>}
           left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
         />
 
         <List.Item
           title={props => <Text {...props}>{status.find((s) => s.id == booking.status)?.name}</Text>}
           left={props => <Text {...props} style={styles.text}>Status:</Text>}
-        />
-
-        <List.Item
-          title={props => <Text {...props}>{booking?.added_by?.username}</Text>}
-          left={props => <Text {...props} style={styles.text}>Added By:</Text>}
-        />
-
-        <List.Item
-          title={props => <Text {...props}>{formatDate(booking.date_added)}</Text>}
-          left={props => <Text {...props} style={styles.text}>Added On:</Text>}
-        />
-
-        <List.Item
-          title={props => <Text {...props}>{booking?.updated_by?.username}</Text>}
-          left={props => <Text {...props} style={styles.text}>Updated By:</Text>}
-        />
-
-        <List.Item
-          title={props => <Text {...props}>{formatDate(booking?.date_updated)}</Text>}
-          left={props => <Text {...props} style={styles.text}>Updated On:</Text>}
         />
       </View>
 
