@@ -272,7 +272,6 @@ export default function (initialBooking) {
               const result = await ImagePicker.launchCameraAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
                 allowsEditing: false,
-                aspect: [4, 3],
                 quality: 1,
               });
 
@@ -401,7 +400,6 @@ export default function (initialBooking) {
               const result = await ImagePicker.launchCameraAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
                 allowsEditing: false,
-                aspect: [4, 3],
                 quality: 1,
               });
 
