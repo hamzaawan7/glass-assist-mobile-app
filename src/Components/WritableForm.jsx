@@ -271,7 +271,7 @@ export default function (initialBooking) {
             <Button onPress={async () => {
               const result = await ImagePicker.launchCameraAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
+                allowsEditing: false,
                 aspect: [4, 3],
                 quality: 1,
               });
@@ -400,7 +400,7 @@ export default function (initialBooking) {
             <Button onPress={async () => {
               const result = await ImagePicker.launchCameraAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
+                allowsEditing: false,
                 aspect: [4, 3],
                 quality: 1,
               });
