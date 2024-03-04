@@ -9,43 +9,43 @@ export default function (booking) {
   const status = useMemo(() => [
     {
       id: 1,
-      name: 'Pending'
+      name: 'PENDING'
     },
     {
       id: 2,
-      name: 'In Progress'
+      name: 'IN PROGRESS'
     },
     {
       id: 3,
-      name: 'Job Completed'
+      name: 'JOB COMPLETED'
     },
     {
       id: 4,
-      name: 'Awaiting Auth'
+      name: 'AWAITING AUTH'
     },
     {
       id: 5,
-      name: 'Awaiting Parts'
+      name: 'AWAITING PARTS'
     },
     {
       id: 6,
-      name: 'Priority'
+      name: 'PRIORITY'
     },
     {
       id: 7,
-      name: 'Invoiced'
+      name: 'INVOICED'
     },
     {
       id: 8,
-      name: 'Canceled'
+      name: 'CANCELED'
     },
     {
       id: 9,
-      name: 'Quote'
+      name: 'QUOTE'
     },
     {
       id: 10,
-      name: 'Completed'
+      name: 'COMPLETED'
     },
   ], []);
 

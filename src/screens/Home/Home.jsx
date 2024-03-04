@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { ActivityIndicator, FlatList, View, RefreshControl } from "react-native";
 
-import { Button, Divider, List, Text, Badge } from "react-native-paper";
+import { Button, Divider, List, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
 import { FontAwesome, FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
@@ -31,43 +31,43 @@ const Home = ({ navigation }) => {
   const status = useMemo(() => [
     {
       id: 1,
-      name: 'Pending'
+      name: 'PENDING'
     },
     {
       id: 2,
-      name: 'In Progress'
+      name: 'IN PROGRESS'
     },
     {
       id: 3,
-      name: 'Job Completed'
+      name: 'JOB COMPLETED'
     },
     {
       id: 4,
-      name: 'Awaiting Auth'
+      name: 'AWAITING AUTH'
     },
     {
       id: 5,
-      name: 'Awaiting Parts'
+      name: 'AWAITING PARTS'
     },
     {
       id: 6,
-      name: 'Priority'
+      name: 'PRIORITY'
     },
     {
       id: 7,
-      name: 'Invoiced'
+      name: 'INVOICED'
     },
     {
       id: 8,
-      name: 'Canceled'
+      name: 'CANCELED'
     },
     {
       id: 9,
-      name: 'Quote'
+      name: 'QUOTE'
     },
     {
       id: 10,
-      name: 'Completed'
+      name: 'COMPLETED'
     },
   ], []);
 
@@ -168,15 +168,15 @@ const Home = ({ navigation }) => {
   }
 
   const getStatusColor = useCallback((jobStatus) => {
-    if (jobStatus === 'Pending') {
+    if (jobStatus === 'PENDING') {
       return 'red';
     }
 
-    if (jobStatus === 'In Progress') {
+    if (jobStatus === 'IN PROGRESS') {
       return 'orange';
     }
 
-    if (jobStatus === 'Completed') {
+    if (jobStatus === 'COMPLETED') {
       return 'green';
     }
 
@@ -219,7 +219,7 @@ const Home = ({ navigation }) => {
       <FlatList
         data={bookings}
         keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <Divider />}
+        ItemSeparatorComponent={() => <Divider bold />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -299,7 +299,7 @@ const Home = ({ navigation }) => {
                 )
               }}
               right={() => (
-                <Text style={{ paddingHorizontal: 4, color: getStatusColor(jobStatus?.name) }}>
+                <Text style={{ paddingHorizontal: 4, fontWeight: 'bold', color: getStatusColor(jobStatus?.name) }}>
                   {jobStatus?.name}
                 </Text>
               )}
