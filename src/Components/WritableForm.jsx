@@ -303,7 +303,7 @@ export default function (initialBooking) {
           />
 
           <TextInput
-            label="Notes"
+            label="Pre-Install Notes"
             style={styles.input}
             value={preCheckNotes}
             onChangeText={setPreCheckNotes}
@@ -371,7 +371,7 @@ export default function (initialBooking) {
           />
 
           <TextInput
-            label="Tech Details"
+            label="Technician Job Notes"
             style={styles.input}
             value={techDetails}
             onChangeText={setTechDetails}

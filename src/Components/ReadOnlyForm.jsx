@@ -123,11 +123,6 @@ export default function (booking) {
           />
 
           <List.Item
-            title="VIN Number:"
-            description={booking?.vehicle?.vin_number}
-          />
-
-          <List.Item
             title="Mileage:"
             description={booking?.miles}
           />
