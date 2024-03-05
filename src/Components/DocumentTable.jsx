@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, ActivityIndicator, Platform, Alert } from 'react-native'
+import { View, Platform, Alert } from 'react-native'
 
 import { DataTable, Text } from 'react-native-paper';
 import { format } from 'date-fns'
@@ -103,14 +103,6 @@ const Document = ({ items: initialItems }) => {
       });
     }
   }, []);
-
-  // if (isLoading) {
-  //   return (
-  //     <View style={[styles.container, styles.horizontal]}>
-  //       <ActivityIndicator size="large" color="#00ff00" />
-  //     </View>
-  //   );
-  // }
 
   return (
     <DataTable>
