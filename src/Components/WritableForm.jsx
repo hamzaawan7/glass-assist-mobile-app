@@ -77,6 +77,7 @@ export default function (initialBooking) {
   const [isLoading, setIsLoading] = useState(false);
   const [preDocuments, setPreDocuments] = useState([]);
   const [postDocuments, setPostDocuments] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   const ref = useRef();
   const ref2 = useRef();
@@ -85,10 +86,15 @@ export default function (initialBooking) {
 
   useEffect(() => {
     if (booking && booking.documents) {
-      setPreDocuments(booking.documents?.filter((doc) => doc.type === 'pre'));
-      setPostDocuments(booking.documents?.filter((doc) => doc.type === 'post'));
+      if (preDocuments?.length === 0) {
+        setPreDocuments(booking.documents?.filter((doc) => doc.type === 'pre'));
+      }
+
+      if (postDocuments?.length === 0) {
+        setPostDocuments(booking.documents?.filter((doc) => doc.type === 'post'));
+      }
     }
-  }, [booking]);
+  }, []);
 
   const handleOK = (signature, field) => {
     setIsLoading(true);
@@ -197,6 +203,8 @@ export default function (initialBooking) {
   }
 
   const uploadFile = useCallback(async (uri, docType) => {
+    setUploading(true);
+
     const filename = uri.substring(uri.lastIndexOf('/') + 1)
     const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
 
@@ -233,10 +241,10 @@ export default function (initialBooking) {
         });
       }
 
-      setIsLoading(false);
+      setUploading(false);
     } catch (error) {
       console.error(error.response.data);
-      setIsLoading(false);
+      setUploading(false);
       Toast.show(`${error.response.data?.message}`, {
         duration: Toast.durations.LONG,
       });
@@ -256,7 +264,7 @@ export default function (initialBooking) {
       <List.Section style={{ paddingHorizontal: 10 }}>
         <List.Accordion title="Pre Installation Documents">
           <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', marginTop: 10 }}>
-            <Button onPress={async () => {
+            <Button loading={uploading} disabled={uploading} onPress={async () => {
               try {
                 const document = await DocumentPicker.getDocumentAsync();
 
@@ -268,17 +276,20 @@ export default function (initialBooking) {
               }
             }}>Select Document</Button>
 
-            <Button onPress={async () => {
-              const result = await ImagePicker.launchCameraAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: false,
-                quality: 1,
-              });
+            <Button loading={uploading} disabled={uploading} onPress={async () => {
+              try {
+                const result = await ImagePicker.launchCameraAsync({
+                  mediaTypes: ImagePicker.MediaTypeOptions.All,
+                  allowsEditing: false,
+                });
 
-              if (!result.canceled) {
-                const uri = result.assets[0].uri;
+                if (!result.canceled) {
+                  const uri = result.assets[0].uri;
 
-                await uploadFile(uri, 'pre');
+                  await uploadFile(uri, 'pre');
+                }
+              } catch (error) {
+                console.error(error)
               }
             }}>Take Picture</Button>
           </View>
@@ -384,7 +395,7 @@ export default function (initialBooking) {
       <List.Section style={{ paddingHorizontal: 10 }}>
         <List.Accordion title="Post Installation Documents">
           <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', marginTop: 10 }}>
-            <Button onPress={async () => {
+            <Button loading={uploading} disabled={uploading} onPress={async () => {
               try {
                 const document = await DocumentPicker.getDocumentAsync();
 
@@ -396,7 +407,7 @@ export default function (initialBooking) {
               }
             }}>Select Document</Button>
 
-            <Button onPress={async () => {
+            <Button loading={uploading} disabled={uploading} onPress={async () => {
               const result = await ImagePicker.launchCameraAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
                 allowsEditing: false,

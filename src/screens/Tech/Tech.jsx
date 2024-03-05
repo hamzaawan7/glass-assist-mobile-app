@@ -53,7 +53,7 @@ const Tech = ({ route }) => {
         setRefreshing(false);
         setIsLoading(false);
       } catch (error) {
-        console.error(error.response?.data);
+        console.error(error);
 
         const { message } = error.response?.data;
 

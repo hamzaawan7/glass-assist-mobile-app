@@ -7,6 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import Toast from 'react-native-root-toast';
 import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import instance from '../api/axios';
 
@@ -14,7 +15,7 @@ const Document = ({ items: initialItems }) => {
   const [items, setItems] = React.useState(initialItems);
 
   const [page, setPage] = React.useState(0);
-  const [numberOfItemsPerPageList] = React.useState([2, 5, 10]);
+  const [numberOfItemsPerPageList] = React.useState([5, 10, 20]);
   const [itemsPerPage, onItemsPerPageChange] = React.useState(
     numberOfItemsPerPageList[0]
   );
@@ -74,18 +75,28 @@ const Document = ({ items: initialItems }) => {
   }, [items]);
 
   const handleFilePress = React.useCallback(async (doc) => {
+    setIsLoading(true);
+
     try {
-      const { uri, mimeType } = await FileSystem.downloadAsync(doc.full_document_path)
+      const { uri } = await FileSystem.downloadAsync(
+        doc.full_document_path,
+        FileSystem.documentDirectory + doc.filename
+      );
 
       if (Platform.OS !== 'ios') {
-        IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
-          data: uri,
-          flags: 1,
-          type: mimeType
+        FileSystem.getContentUriAsync(uri).then(file => {
+          setIsLoading(false);
+
+          IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+            data: file,
+            flags: 1,
+            type: 'image/jpeg'
+          });
         });
       }
     } catch (e) {
       console.error(e);
+      setIsLoading(false);
 
       Toast.show('Something went wrong!', {
         textColor: 'red'
@@ -93,16 +104,20 @@ const Document = ({ items: initialItems }) => {
     }
   }, []);
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <View style={[styles.container, styles.horizontal]}>
+  //       <ActivityIndicator size="large" color="#00ff00" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <DataTable>
+      <Spinner
+        visible={isLoading}
+      />
+
       <DataTable.Header>
         <DataTable.Title>Name</DataTable.Title>
         <DataTable.Title numeric>Date Added</DataTable.Title>
