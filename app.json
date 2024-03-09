@@ -43,14 +43,17 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.amigos.glassassist"
+      "package": "com.amigos.glassassist",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "96495713-fb95-4935-8553-8ed20b9c0420"
+        "projectId": "d0c949c4-be67-4617-b14a-99da51e65309"
       }
     }
   }

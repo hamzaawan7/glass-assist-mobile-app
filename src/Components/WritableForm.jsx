@@ -59,7 +59,7 @@ const reasons = [
   },
 ]
 
-export default function (initialBooking) {
+export default function ({ setCanScroll, ...initialBooking }) {
   const [booking, setBooking] = useState(initialBooking);
 
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
@@ -346,6 +346,8 @@ export default function (initialBooking) {
                 style={{ width: width - 25, height: 200 }}
                 onOK={(signature) => handleOK(signature, 'signature')}
                 autoClear={true}
+                onBegin={() => setCanScroll(false)}
+                onEnd={() => setCanScroll(true)}
                 webStyle={style}
                 backgroundColor={'lightgray'}
               />

@@ -19,6 +19,7 @@ const Tech = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [booking, setBooking] = useState({});
   const [refreshing, setRefreshing] = useState(false);
+  const [canScroll, setCanScroll] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -104,12 +105,12 @@ const Tech = ({ route }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <ScrollView refreshControl={
+      <ScrollView scrollEnabled={canScroll} refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
         <ReadOnlyForm {...booking} />
 
-        <WritableForm {...booking} />
+        <WritableForm {...booking} setCanScroll={setCanScroll} />
       </ScrollView>
     </KeyboardAvoidingView>
   );
