@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { Text, List } from "react-native-paper";
 
 import styles from '../screens/Tech/style';
+import { format } from "date-fns";
 
 export default function (booking) {
   const status = useMemo(() => [
@@ -58,7 +59,7 @@ export default function (booking) {
         />
 
         <List.Item
-          title={props => <Text {...props}>{booking?.datetime}</Text>}
+          title={props => <Text {...props}>{booking?.datetime ? format(booking.datetime.split(' ')[0], 'dd/MM/yyyy') : null}</Text>}
           left={props => <Text {...props} style={styles.text}>Date/Time:</Text>}
         />
 

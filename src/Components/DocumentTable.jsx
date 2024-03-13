@@ -28,6 +28,10 @@ const Document = ({ items: initialItems }) => {
     setPage(0);
   }, [itemsPerPage]);
 
+  React.useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
+
   const deleteDocument = React.useCallback((id) => {
 
     Alert.alert('Delete Action', 'Are you sure you want to delete?', [

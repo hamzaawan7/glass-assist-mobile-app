@@ -59,7 +59,7 @@ const reasons = [
   },
 ]
 
-export default function ({ setCanScroll, ...initialBooking }) {
+export default function ({ setCanScroll, preDocuments, setPreDocuments, ...initialBooking }) {
   const [booking, setBooking] = useState(initialBooking);
 
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
@@ -75,7 +75,6 @@ export default function ({ setCanScroll, ...initialBooking }) {
   const [jobNotCompleted, setJobNotCompleted] = useState(booking?.job_not_completed);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [preDocuments, setPreDocuments] = useState([]);
   const [postDocuments, setPostDocuments] = useState([]);
   const [uploading, setUploading] = useState(false);
 
@@ -95,6 +94,8 @@ export default function ({ setCanScroll, ...initialBooking }) {
       }
     }
   }, []);
+
+  console.log(preDocuments?.length)
 
   const handleOK = (signature, field) => {
     setIsLoading(true);

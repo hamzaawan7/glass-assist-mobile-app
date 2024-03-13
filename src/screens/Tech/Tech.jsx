@@ -21,6 +21,8 @@ const Tech = ({ route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [canScroll, setCanScroll] = useState(true);
 
+  const [preDocuments, setPreDocuments] = useState([]);
+
   useFocusEffect(
     useCallback(() => {
       setIsLoading(true);
@@ -110,7 +112,7 @@ const Tech = ({ route }) => {
       }>
         <ReadOnlyForm {...booking} />
 
-        <WritableForm {...booking} setCanScroll={setCanScroll} />
+        <WritableForm {...booking} setCanScroll={setCanScroll} preDocuments={preDocuments} setPreDocuments={setPreDocuments} />
       </ScrollView>
     </KeyboardAvoidingView>
   );
