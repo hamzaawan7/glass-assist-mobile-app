@@ -59,7 +59,7 @@ const reasons = [
   },
 ]
 
-export default function ({ setCanScroll, preDocuments, setPreDocuments, ...initialBooking }) {
+export default function ({ setCanScroll, postDocuments, setPostDocuments, preDocuments, setPreDocuments, ...initialBooking }) {
   const [booking, setBooking] = useState(initialBooking);
 
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
@@ -75,7 +75,6 @@ export default function ({ setCanScroll, preDocuments, setPreDocuments, ...initi
   const [jobNotCompleted, setJobNotCompleted] = useState(booking?.job_not_completed);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [postDocuments, setPostDocuments] = useState([]);
   const [uploading, setUploading] = useState(false);
 
   const ref = useRef();
