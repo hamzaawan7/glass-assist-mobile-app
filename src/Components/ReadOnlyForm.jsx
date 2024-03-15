@@ -76,81 +76,97 @@ export default function (booking) {
           <List.Item
             title="Business:"
             description={booking?.customer?.business}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Name:"
             description={booking?.customer?.first_name}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Job Location:"
             description={`${booking?.job_location?.address_line_1 || ''} ${booking?.job_location?.address_line_2 || ''} ${booking?.job_location?.city || ''} ${booking?.job_location?.county || ''}`}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Postcode:"
             description={booking?.job_location?.postcode}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Phone No:"
             description={booking?.customer?.phone}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Mobile Phone:"
             description={booking?.customer?.mobile}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Order Number:"
             description={booking?.order_number}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Vehicle Reg:"
             description={booking?.vehicle?.reg_no}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Make:"
             description={booking?.vehicle?.car_make?.name}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Model:"
             description={booking?.vehicle?.car_model?.name}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Mileage:"
             description={booking?.miles}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Glass Position:" // www_lookups -> glassItemDescription
             description={booking?.miles}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Job Cost:"
             description={booking?.job_cost}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Work Required:"
             description={booking?.work_required}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Additional Details"
             description={booking?.additional_details}
+            descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Sub Contractor"
             description={booking?.sub_contractor?.name}
+            descriptionNumberOfLines={10}
           />
         </List.Accordion>
       </List.Section>

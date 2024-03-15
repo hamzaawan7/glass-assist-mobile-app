@@ -93,6 +93,11 @@ const Tech = ({ route }) => {
         })
       }
 
+      if (currentBooking && currentBooking?.documents) {
+        setPreDocuments(currentBooking.documents?.filter((doc) => doc.type === 'pre'));
+        setPostDocuments(currentBooking.documents?.filter((doc) => doc.type === 'post'));
+      }
+
       setRefreshing(false);
       setIsLoading(false);
     }
@@ -113,10 +118,10 @@ const Tech = ({ route }) => {
       }>
         <ReadOnlyForm {...booking} />
 
-        <WritableForm 
-          {...booking} 
-          setCanScroll={setCanScroll} 
-          preDocuments={preDocuments} 
+        <WritableForm
+          {...booking}
+          setCanScroll={setCanScroll}
+          preDocuments={preDocuments}
           setPreDocuments={setPreDocuments}
           postDocuments={postDocuments}
           setPostDocuments={setPostDocuments}

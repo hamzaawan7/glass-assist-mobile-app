@@ -4,8 +4,9 @@ import { ActivityIndicator, FlatList, View, RefreshControl } from "react-native"
 import { Button, Divider, List, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
-import { FontAwesome, FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, AntDesign, Feather, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import NetInfo from '@react-native-community/netinfo';
+import { format } from "date-fns";
 
 import styles from "./style";
 
@@ -157,14 +158,14 @@ const Home = ({ navigation }) => {
     }
 
     if (vehicle?.car_model && vehicle?.car_model?.name) {
-      name += `${vehicle?.car_model?.name} `;
-    }
-
-    if (vehicle?.vehicle && vehicle?.vehicle?.reg_no) {
-      name += `(${vehicle?.vehicle?.reg_no})`;
+      name += `${vehicle?.car_model?.name}`;
     }
 
     return name;
+  }
+
+  const getRegNo = (vehicle) => {
+    return vehicle?.vehicle?.reg_no || '';
   }
 
   const getStatusColor = useCallback((jobStatus) => {
@@ -203,7 +204,7 @@ const Home = ({ navigation }) => {
       </Text>
 
       <Text style={styles.dateText}>
-        {date.toLocaleDateString()}   {days[date.getDay() - 1]}
+        {format(date, 'dd/MM/yyyy')}   {days[date.getDay() - 1]}
       </Text>
 
       <Divider />
@@ -260,7 +261,7 @@ const Home = ({ navigation }) => {
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <FontAwesome name="user" size={14} color="black" />
 
-                        <Text style={{ marginLeft: 5 }}>{item?.customer?.first_name + ' ' + item?.customer?.surname}</Text>
+                        <Text style={{ marginLeft: 5 }}>{item?.customer?.first_name || ''}' '{item?.customer?.surname || ''}</Text>
                       </View>
                     ) : null}
 
@@ -268,7 +269,10 @@ const Home = ({ navigation }) => {
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <AntDesign name="car" size={14} color="black" />
 
-                        <Text style={{ marginLeft: 5 }}>{getCarName(item)}</Text>
+                        <Text style={{ marginLeft: 5 }}>
+                          {getCarName(item)}{" "}
+                          <Text style={{ fontWeight: 'bold' }}>{getRegNo(item)}</Text>
+                        </Text>
                       </View>
                     ) : null}
 
@@ -277,6 +281,22 @@ const Home = ({ navigation }) => {
                         <FontAwesome name="send" size={14} color="black" />
 
                         <Text style={{ marginLeft: 5 }}>{item?.job_location?.address_line_1}</Text>
+                      </View>
+                    ) : null}
+
+                    {item?.job_location?.postcode ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <MaterialCommunityIcons name="post-outline" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.job_location?.postcode}</Text>
+                      </View>
+                    ) : null}
+
+                    {item?.customer?.mobile ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <Entypo name="phone" size={14} color="black" />
+
+                        <Text style={{ marginLeft: 5 }}>{item?.customer?.mobile}</Text>
                       </View>
                     ) : null}
 

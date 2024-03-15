@@ -82,20 +82,6 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
 
   const style = `.m-signature-pad--footer {display: none; margin: 0px;}`;
 
-  useEffect(() => {
-    if (booking && booking.documents) {
-      if (preDocuments?.length === 0) {
-        setPreDocuments(booking.documents?.filter((doc) => doc.type === 'pre'));
-      }
-
-      if (postDocuments?.length === 0) {
-        setPostDocuments(booking.documents?.filter((doc) => doc.type === 'post'));
-      }
-    }
-  }, []);
-
-  console.log(preDocuments?.length)
-
   const handleOK = (signature, field) => {
     setIsLoading(true);
 
@@ -294,7 +280,9 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
             }}>Take Picture</Button>
           </View>
 
-          <Document items={preDocuments} />
+          <Document items={preDocuments} setItems={(doc) => {
+            setPreDocuments(doc);
+          }} />
         </List.Accordion>
       </List.Section>
 
@@ -354,8 +342,8 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
 
               <View style={styles.row}>
                 <Button
-                  mode="contained"
-                  style={styles.saveButton}
+                  mode="elevated"
+                  style={{ marginTop: 10 }}
                   loading={isLoading}
                   onPress={() => ref.current?.readSignature()}
                 >
@@ -363,7 +351,8 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
                 </Button>
 
                 <Button
-                  mode="outline"
+                  mode="elevated"
+                  style={{ marginTop: 10, marginLeft: 10 }}
                   loading={isLoading}
                   onPress={() => ref.current?.clearSignature()}
                 >
@@ -424,7 +413,9 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
             }}>Take Picture</Button>
           </View>
 
-          <Document items={postDocuments} />
+          <Document items={postDocuments} setItems={(doc) => {
+            setPostDocuments(doc);
+          }} />
         </List.Accordion>
       </List.Section>
 
@@ -479,8 +470,8 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
 
               <View style={styles.row}>
                 <Button
-                  mode="contained"
-                  style={styles.saveButton}
+                  mode="elevated"
+                  style={{ marginTop: 10 }}
                   loading={isLoading}
                   onPress={() => ref2.current?.readSignature()}
                 >
@@ -488,7 +479,8 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
                 </Button>
 
                 <Button
-                  mode="outline"
+                  mode="elevated"
+                  style={{ marginTop: 10, marginLeft: 10 }}
                   loading={isLoading}
                   onPress={() => ref2.current?.clearSignature()}
                 >
@@ -584,7 +576,7 @@ const styles = StyleSheet.create({
   row: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     width: "100%",
     alignItems: "center",
   },

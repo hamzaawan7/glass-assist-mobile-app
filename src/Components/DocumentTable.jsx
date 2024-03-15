@@ -11,9 +11,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import instance from '../api/axios';
 
-const Document = ({ items: initialItems }) => {
-  const [items, setItems] = React.useState(initialItems);
-
+const Document = ({ items, setItems }) => {
   const [page, setPage] = React.useState(0);
   const [numberOfItemsPerPageList] = React.useState([5, 10, 20]);
   const [itemsPerPage, onItemsPerPageChange] = React.useState(
@@ -27,10 +25,6 @@ const Document = ({ items: initialItems }) => {
   React.useEffect(() => {
     setPage(0);
   }, [itemsPerPage]);
-
-  React.useEffect(() => {
-    setItems(initialItems);
-  }, [initialItems]);
 
   const deleteDocument = React.useCallback((id) => {
 
@@ -54,10 +48,13 @@ const Document = ({ items: initialItems }) => {
             setIsLoading(false);
 
             if (type === 'success') {
-              setItems((prev) => prev.filter((doc) => doc.id !== id))
+              const updatedItems = items.filter((doc) => doc.id !== id);
+
+              setItems([...updatedItems]);
+
               Toast.show(message);
             } else {
-              Toast.show(message, {
+              Toast.show(typeof message === 'string' ? message : 'Something went wrong!', {
                 textColor: 'red'
               })
             }
