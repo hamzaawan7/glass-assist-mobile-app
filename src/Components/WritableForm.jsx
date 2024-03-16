@@ -140,6 +140,8 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
   };
 
   const saveHandle = async () => {
+    setIsLoading(true);
+
     const { isConnected } = await NetInfo.fetch();
 
     const payload = {
@@ -174,8 +176,9 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
 
         setIsLoading(false);
       } catch (error) {
-        console.error(error.response.data);
+        console.error(error);
         setIsLoading(false);
+
         Toast.show(`${error.response.data?.message}`, {
           duration: Toast.durations.LONG,
         });
@@ -185,6 +188,12 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
         route: `/api/booking/update/${booking.id}`,
         payload
       }));
+
+      setIsLoading(false);
+
+      Toast.show(`[NETWORK ERROR]: job will be updated once you connected to internet`, {
+        duration: Toast.durations.LONG,
+      });
     }
   }
 
@@ -464,6 +473,8 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
                 style={{ width: width - 25, height: 200 }}
                 onOK={(signature) => handleOK(signature, 'signature_1')}
                 autoClear={true}
+                onBegin={() => setCanScroll(false)}
+                onEnd={() => setCanScroll(true)}
                 webStyle={style}
                 backgroundColor={'lightgray'}
               />

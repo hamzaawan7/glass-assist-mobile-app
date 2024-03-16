@@ -271,7 +271,7 @@ const Home = ({ navigation }) => {
 
                         <Text style={{ marginLeft: 5 }}>
                           {getCarName(item)}{" "}
-                          <Text style={{ fontWeight: 'bold' }}>{getRegNo(item)}</Text>
+                          <Text style={{ fontWeight: 'bold' }}>({getRegNo(item)})</Text>
                         </Text>
                       </View>
                     ) : null}
