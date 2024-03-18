@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { View } from "react-native";
+import { View, Linking } from "react-native";
 
 import { Text, List } from "react-native-paper";
 
@@ -100,12 +100,22 @@ export default function (booking) {
           <List.Item
             title="Phone No:"
             description={booking?.customer?.phone}
+            onPress={() => {
+              if (booking?.customer?.phone) {
+                Linking.openURL(`tel:${booking.customer.phone}`)
+              }
+            }}
             descriptionNumberOfLines={10}
           />
 
           <List.Item
             title="Mobile Phone:"
             description={booking?.customer?.mobile}
+            onPress={() => {
+              if (booking?.customer?.mobile) {
+                Linking.openURL(`tel:${booking.customer.mobile}`)
+              }
+            }}
             descriptionNumberOfLines={10}
           />
 

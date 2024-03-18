@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { ActivityIndicator, FlatList, View, RefreshControl } from "react-native";
+import { ActivityIndicator, FlatList, View, RefreshControl, Linking } from "react-native";
 
 import { Button, Divider, List, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -296,7 +296,14 @@ const Home = ({ navigation }) => {
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <Entypo name="phone" size={14} color="black" />
 
-                        <Text style={{ marginLeft: 5 }}>{item?.customer?.mobile}</Text>
+                        <Text
+                          style={{ marginLeft: 5 }}
+                          onPress={() => {
+                            Linking.openURL(`tel:${item?.customer?.mobile}`)
+                          }}
+                        >
+                          {item?.customer?.mobile}
+                        </Text>
                       </View>
                     ) : null}
 

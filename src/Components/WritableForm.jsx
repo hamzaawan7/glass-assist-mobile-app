@@ -83,7 +83,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
   const style = `.m-signature-pad--footer {display: none; margin: 0px;}`;
 
   const handleOK = (signature, field) => {
-    setIsLoading(true);
+    setUploading(true);
 
     const path = `${FileSystem.cacheDirectory}${nanoid()}-sign.png`;
     FileSystem.writeAsStringAsync(
@@ -127,10 +127,10 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
             });
           }
 
-          setIsLoading(false);
+          setUploading(false);
         } catch (error) {
           console.error(error.response.data);
-          setIsLoading(false);
+          setUploading(false);
           Toast.show(`${error.response.data?.message}`, {
             duration: Toast.durations.LONG,
           });
@@ -353,7 +353,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
                 <Button
                   mode="elevated"
                   style={{ marginTop: 10 }}
-                  loading={isLoading}
+                  loading={uploading}
                   onPress={() => ref.current?.readSignature()}
                 >
                   Submit
@@ -362,7 +362,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
                 <Button
                   mode="elevated"
                   style={{ marginTop: 10, marginLeft: 10 }}
-                  loading={isLoading}
+                  loading={uploading}
                   onPress={() => ref.current?.clearSignature()}
                 >
                   Clear
@@ -483,7 +483,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
                 <Button
                   mode="elevated"
                   style={{ marginTop: 10 }}
-                  loading={isLoading}
+                  loading={uploading}
                   onPress={() => ref2.current?.readSignature()}
                 >
                   Save Signature
@@ -492,7 +492,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
                 <Button
                   mode="elevated"
                   style={{ marginTop: 10, marginLeft: 10 }}
-                  loading={isLoading}
+                  loading={uploading}
                   onPress={() => ref2.current?.clearSignature()}
                 >
                   Clear
