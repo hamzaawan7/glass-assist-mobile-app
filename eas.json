@@ -19,6 +19,9 @@
     "production": {
       "env": {
         "EXPO_PUBLIC_API_URL": "https://staging.glassassistuk.co.uk"
+      },
+      "android": {
+        "buildType": "aab"
       }
     }
   },
