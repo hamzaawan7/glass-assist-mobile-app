@@ -26,6 +26,10 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./agile-extension-276919-24ce2b3ce3db.json"
+      }
+    }
   }
 }
