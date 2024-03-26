@@ -140,7 +140,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
   };
 
   const saveHandle = async () => {
-    setIsLoading(true);
+    setUploading(true);
 
     const { isConnected } = await NetInfo.fetch();
 
@@ -174,10 +174,10 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
           });
         }
 
-        setIsLoading(false);
+        setUploading(false);
       } catch (error) {
         console.error(error);
-        setIsLoading(false);
+        setUploading(false);
 
         Toast.show(`${error.response.data?.message}`, {
           duration: Toast.durations.LONG,
@@ -189,7 +189,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
         payload
       }));
 
-      setIsLoading(false);
+      setUploading(false);
 
       Toast.show(`[NETWORK ERROR]: job will be updated once you connected to internet`, {
         duration: Toast.durations.LONG,
@@ -549,7 +549,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
       <Button
         mode="contained"
         style={styles.saveButton}
-        loading={isLoading}
+        loading={uploading}
         onPress={saveHandle}
       >
         Save Job Card
