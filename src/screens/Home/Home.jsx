@@ -277,10 +277,15 @@ const Home = ({ navigation }) => {
                     ) : null}
 
                     {item?.job_location?.address_line_1 ? (
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                        <FontAwesome name="send" size={14} color="black" />
+                      <View style={{ flexDirection: 'row', gap: 10 }}>
+                        <FontAwesome name="send" size={14} style={{ marginTop: 5 }} color="black" />
 
-                        <Text style={{ marginLeft: 5 }}>{item?.job_location?.address_line_1}</Text>
+                        <Text style={{ marginLeft: 5 }}>
+                          {item?.job_location?.address_line_1}{" "}
+                          {item?.job_location?.address_line_2 || ''}{" "}
+                          {item?.job_location?.city || ''}{" "}
+                          {item?.job_location?.county || ''}
+                        </Text>
                       </View>
                     ) : null}
 

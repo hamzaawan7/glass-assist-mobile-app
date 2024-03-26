@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, ActivityIndicator, Platform, Image } from 'react-native'
+import React, { useCallback, useRef, useState } from 'react'
+import { Dimensions, StyleSheet, View, Platform, Image } from 'react-native'
 import { TextInput, Text, Button, Checkbox, List } from "react-native-paper";
 
 import * as FileSystem from "expo-file-system";
@@ -59,22 +59,30 @@ const reasons = [
   },
 ]
 
-export default function ({ setCanScroll, postDocuments, setPostDocuments, preDocuments, setPreDocuments, ...initialBooking }) {
+export default function ({ 
+  setCanScroll, 
+  postDocuments, 
+  setPostDocuments, 
+  preDocuments, 
+  setPreDocuments, 
+  jobSignOff,
+  preJobComplete,
+  setJobSignOff,
+  setPreJobComplete,
+  ...initialBooking
+}) {
   const [booking, setBooking] = useState(initialBooking);
 
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
   const [preCName, setPreCName] = useState(booking?.pre_c_name);
-  const [jobSignOff, setJobSignOff] = useState(booking?.job_complete)
   const [customerName, setCustomerName] = useState(booking?.c_name)
   const [type, setType] = useState(booking?.payment_type);
-  const [preJobComplete, setPreJobComplete] = useState(booking?.pre_job_complete);
   const [techStatement, setTechStatement] = useState(booking?.technician_statement);
   const [techNote, setTechNote] = useState(booking?.technician_note);
   const [batchNumber, setBatchNumber] = useState(booking?.batch_number)
   const [techDetails, setTechDetails] = useState(booking?.tech_details);
   const [jobNotCompleted, setJobNotCompleted] = useState(booking?.job_not_completed);
 
-  const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const ref = useRef();
@@ -166,7 +174,14 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
         );
 
         const { data, success } = res.data;
-        console.log(data);
+        
+        if (data?.pre_job_complete) {
+          setPreJobComplete(data.pre_job_complete);
+        }
+
+        if (data?.job_complete) {
+          setJobSignOff(data.job_complete);
+        }
 
         if (success) {
           Toast.show(`Saved successfully`, {
@@ -245,14 +260,6 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
       });
     }
   }, [booking]);
-
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -550,6 +557,7 @@ export default function ({ setCanScroll, postDocuments, setPostDocuments, preDoc
         mode="contained"
         style={styles.saveButton}
         loading={uploading}
+        disabled={uploading}
         onPress={saveHandle}
       >
         Save Job Card

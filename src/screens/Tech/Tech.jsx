@@ -23,6 +23,8 @@ const Tech = ({ route }) => {
 
   const [preDocuments, setPreDocuments] = useState([]);
   const [postDocuments, setPostDocuments] = useState([]);
+  const [jobSignOff, setJobSignOff] = useState(0);
+  const [preJobComplete, setPreJobComplete] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
@@ -98,6 +100,14 @@ const Tech = ({ route }) => {
         setPostDocuments(currentBooking.documents?.filter((doc) => doc.type === 'post'));
       }
 
+      if (currentBooking?.pre_job_complete) {
+        setPreJobComplete(currentBooking.pre_job_complete);
+      }
+
+      if (currentBooking?.job_complete) {
+        setJobSignOff(currentBooking.job_complete);
+      }
+
       setRefreshing(false);
       setIsLoading(false);
     }
@@ -125,6 +135,10 @@ const Tech = ({ route }) => {
           setPreDocuments={setPreDocuments}
           postDocuments={postDocuments}
           setPostDocuments={setPostDocuments}
+          jobSignOff={jobSignOff}
+          setJobSignOff={setJobSignOff}
+          preJobComplete={preJobComplete}
+          setPreJobComplete={setPreJobComplete}
         />
       </ScrollView>
     </KeyboardAvoidingView>
