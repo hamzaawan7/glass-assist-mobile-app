@@ -7,18 +7,18 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://staging.glassassistuk.co.uk"
+        "EXPO_PUBLIC_API_URL": "https://ms.glassassistuk.co.uk"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://staging.glassassistuk.co.uk"
+        "EXPO_PUBLIC_API_URL": "https://ms.glassassistuk.co.uk"
       }
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://staging.glassassistuk.co.uk"
+        "EXPO_PUBLIC_API_URL": "https://ms.glassassistuk.co.uk"
       },
       "android": {
         "buildType": "app-bundle"

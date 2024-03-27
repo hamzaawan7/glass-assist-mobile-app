@@ -335,7 +335,7 @@ export default function ({
           {booking?.signature ? (
             <Image
               source={{
-                uri: `https://staging.glassassistuk.co.uk/files/Signatures/${booking?.signature}`,
+                uri: `https://ms.glassassistuk.co.uk/files/Signatures/${booking?.signature}`,
               }}
               style={{
                 width: '100%',
@@ -466,7 +466,7 @@ export default function ({
           {booking?.signature_1 ? (
             <Image
               source={{
-                uri: `https://staging.glassassistuk.co.uk/files/Signatures/${booking?.signature_1}`,
+                uri: `https://ms.glassassistuk.co.uk/files/Signatures/${booking?.signature_1}`,
               }}
               style={{
                 width: '100%',

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: "https://staging.glassassistuk.co.uk",
+    baseURL: "https://ms.glassassistuk.co.uk",
     withCredentials: true,
     headers: {
         post: {
