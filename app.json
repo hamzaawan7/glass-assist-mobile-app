@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "GlassAssist",
-    "slug": "GlassAssist",
+    "name": "GlassAssistUK",
+    "slug": "GlassAssistUK",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -36,7 +36,7 @@
         "com.apple.developer.networking.wifi-info": true
       },
       "supportsTablet": true,
-      "bundleIdentifier": "com.amigos.glassassist"
+      "bundleIdentifier": "com.amigos.glassassistuk"
     },
     "android": {
       "adaptiveIcon": {

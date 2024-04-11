@@ -311,7 +311,7 @@
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = GlassAssist/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Glass Assist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Glass Assist UK";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -339,7 +339,7 @@
 				CODE_SIGN_ENTITLEMENTS = GlassAssist/GlassAssist.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = GlassAssist/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Glass Assist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Glass Assist UK";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
