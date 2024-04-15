@@ -7,6 +7,7 @@ import Toast from "react-native-root-toast";
 import { FontAwesome, FontAwesome5, AntDesign, Feather, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import NetInfo from '@react-native-community/netinfo';
 import { format } from "date-fns";
+import { CommonActions, StackActions } from "@react-navigation/native";
 
 import styles from "./style";
 
@@ -186,7 +187,15 @@ const Home = ({ navigation }) => {
 
   const handleLogout = async () => {
     await AsyncStorage.clear();
-    navigation.navigate('Login');
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Login' }
+        ],
+      })
+    );
   };
 
   if (isLoading) {

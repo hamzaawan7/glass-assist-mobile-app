@@ -6,6 +6,7 @@ import Icon from "@expo/vector-icons/FontAwesome";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AxiosError } from "axios";
+import { StackActions } from "@react-navigation/native";
 import NetInfo from '@react-native-community/netinfo';
 
 import styles from "./style";
@@ -61,7 +62,9 @@ const Login = ({ navigation }) => {
           await AsyncStorage.setItem("user", JSON.stringify(data.user));
         }
 
-        navigation.navigate('Home');
+        setEmail("");
+        setPassword("");
+        navigation.dispatch(StackActions.replace('Home'));
       }
 
       setIsLoading(false);
