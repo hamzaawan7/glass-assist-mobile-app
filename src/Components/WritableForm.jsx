@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system';
 
 import instance from '../api/axios';
 import Document from './DocumentTable';
@@ -59,12 +60,12 @@ const reasons = [
   },
 ]
 
-export default function ({ 
-  setCanScroll, 
-  postDocuments, 
-  setPostDocuments, 
-  preDocuments, 
-  setPreDocuments, 
+export default function ({
+  setCanScroll,
+  postDocuments,
+  setPostDocuments,
+  preDocuments,
+  setPreDocuments,
   jobSignOff,
   preJobComplete,
   setJobSignOff,
@@ -89,6 +90,24 @@ export default function ({
   const ref2 = useRef();
 
   const style = `.m-signature-pad--footer {display: none; margin: 0px;}`;
+
+  const [permission, requestPermission] = ImagePicker.useCameraPermissions();
+
+  async function verifyPermission() {
+    if (permission.status === ImagePicker.PermissionStatus.UNDETERMINED) {
+      const permissionResponse = await requestPermission();
+
+      return permissionResponse.granted;
+    }
+
+    if (permission.status === ImagePicker.PermissionStatus.DENIED) {
+      Toast.show('You need to grant camera access to use this app');
+
+      return false;
+    }
+
+    return true;
+  }
 
   const handleOK = (signature, field) => {
     setUploading(true);
@@ -174,7 +193,7 @@ export default function ({
         );
 
         const { data, success } = res.data;
-        
+
         if (data?.pre_job_complete) {
           setPreJobComplete(data.pre_job_complete);
         }
@@ -268,30 +287,50 @@ export default function ({
           <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', marginTop: 10 }}>
             <Button loading={uploading} disabled={uploading} onPress={async () => {
               try {
-                const document = await DocumentPicker.getDocumentAsync();
+                const filePermission = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-                if (document.type !== 'cancel') {
-                  await uploadFile(document.uri, 'pre')
+                if (filePermission.granted) {
+                  const document = await DocumentPicker.getDocumentAsync();
+
+                  if (document.type !== 'cancel') {
+                    await uploadFile(document.uri, 'pre')
+                  }
+                } else {
+                  Toast.show('Please check media permission!', {
+                    textColor: 'red'
+                  });
                 }
               } catch (error) {
                 console.log(error)
+
+                Toast.show('Something went wrong!', {
+                  textColor: 'red'
+                });
               }
             }}>Select Document</Button>
 
             <Button loading={uploading} disabled={uploading} onPress={async () => {
-              try {
-                const result = await ImagePicker.launchCameraAsync({
-                  mediaTypes: ImagePicker.MediaTypeOptions.All,
-                  allowsEditing: false,
-                });
+              if (await verifyPermission()) {
+                try {
+                  const result = await ImagePicker.launchCameraAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.All,
+                    allowsEditing: false,
+                  });
 
-                if (!result.canceled) {
-                  const uri = result.assets[0].uri;
+                  if (!result.canceled) {
+                    const uri = result.assets[0].uri;
 
-                  await uploadFile(uri, 'pre');
+                    await uploadFile(uri, 'pre');
+                  } else {
+                    Toast.show('Cancelled!');
+                  }
+                } catch (error) {
+                  console.error(error)
                 }
-              } catch (error) {
-                console.error(error)
+              } else {
+                Toast.show('Please check camera permission!', {
+                  textColor: 'red'
+                });
               }
             }}>Take Picture</Button>
           </View>
@@ -404,27 +443,47 @@ export default function ({
           <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', marginTop: 10 }}>
             <Button loading={uploading} disabled={uploading} onPress={async () => {
               try {
-                const document = await DocumentPicker.getDocumentAsync();
+                const filePermission = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-                if (document.type !== 'cancel') {
-                  await uploadFile(document.uri, 'post')
+                if (filePermission.granted) {
+                  const document = await DocumentPicker.getDocumentAsync();
+
+                  if (document.type !== 'cancel') {
+                    await uploadFile(document.uri, 'post')
+                  }
+                } else {
+                  Toast.show('Please check media permission!', {
+                    textColor: 'red'
+                  });
                 }
               } catch (error) {
                 console.log(error)
+
+                Toast.show('Something went wrong!', {
+                  textColor: 'red'
+                });
               }
             }}>Select Document</Button>
 
             <Button loading={uploading} disabled={uploading} onPress={async () => {
-              const result = await ImagePicker.launchCameraAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: false,
-                quality: 1,
-              });
+              if (await verifyPermission()) {
+                const result = await ImagePicker.launchCameraAsync({
+                  mediaTypes: ImagePicker.MediaTypeOptions.All,
+                  allowsEditing: false,
+                  quality: 1,
+                });
 
-              if (!result.canceled) {
-                const uri = result.assets[0].uri;
+                if (!result.canceled) {
+                  const uri = result.assets[0].uri;
 
-                await uploadFile(uri, 'post');
+                  await uploadFile(uri, 'post');
+                } else {
+                  Toast.show('Cancelled!');
+                }
+              } else {
+                Toast.show('Please check camera permission!', {
+                  textColor: 'red'
+                });
               }
             }}>Take Picture</Button>
           </View>

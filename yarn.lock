@@ -3121,11 +3121,6 @@ expo-document-picker@~11.0.1:
   dependencies:
     uuid "^3.3.2"
 
-expo-eas-client@~0.11.0:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/expo-eas-client/-/expo-eas-client-0.11.2.tgz#2e8d6f347dcea38b58c2b6a21db7c632383fb1ba"
-  integrity sha512-SY7rVFxb4ut/OMTgR7A39Jg+8+hXwQNRpZd+RBpB+B5XV2STj/pWXHnGFhBayEF4umI4SxrOvisY90rlPWVO9Q==
-
 expo-error-recovery@~4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/expo-error-recovery/-/expo-error-recovery-4.0.1.tgz#3e3333e134c992c234539d3773fe78915c883755"
@@ -3156,13 +3151,6 @@ expo-image-picker@~14.0.2:
   integrity sha512-VN5wMWzhYhIRhFq8I1pjMbn/ivjlhWfxzJpz5jUOf3mQ8vxrI5GcR8cJO9kyYwuCrI9W3GUzh/aDt7QRSTQDDA==
   dependencies:
     expo-image-loader "~4.0.0"
-
-expo-insights@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/expo-insights/-/expo-insights-0.6.1.tgz#d338e4d1c957eed16f38acade8e97c53efb09c9a"
-  integrity sha512-0cCCKcFq7e7HME9uwVU5eE9LYEPnYEmTkE+LjJs/G15fnw+xK52jwx3p9nZcdI9lmZ23qBtqatlQKz/PMXSheQ==
-  dependencies:
-    expo-eas-client "~0.11.0"
 
 expo-intent-launcher@~10.3.1:
   version "10.3.1"
