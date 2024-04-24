@@ -1,14 +1,9 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
 node_modules/
 .expo/
 dist/
 npm-debug.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-web-build/
 
 # macOS
 .DS_Store
@@ -16,3 +11,29 @@ web-build/
 # app console config
 agile-extension-276919-24ce2b3ce3db.json
 agile-extension-276919-a57f584d16b4.json
+
+web-build/
+ 
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+ 
+# Metro
+.metro-health-check*
+ 
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+ 
+*.pem
+ 
+# local env files
+.env*.local
+ 
+# typescript
+*.tsbuildinfo
