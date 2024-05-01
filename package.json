@@ -1,6 +1,6 @@
 {
   "name": "glassassist",
-  "version": "1.0.0",
+  "version": "50.0.42",
   "scripts": {
     "postinstall": "npx patch-package",
     "start": "expo start --dev-client",
@@ -24,7 +24,6 @@
     "expo-file-system": "~16.0.9",
     "expo-image-picker": "~14.7.1",
     "expo-intent-launcher": "~10.11.0",
-    "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
     "expo-task-manager": "~11.7.3",
     "nanoid": "^4.0.1",
