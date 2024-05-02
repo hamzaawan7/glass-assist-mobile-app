@@ -54,6 +54,19 @@ const Tech = ({ route }) => {
           await AsyncStorage.setItem(`booking.${id}`, JSON.stringify(currentBooking));
 
           setBooking(currentBooking);
+
+          if (currentBooking && currentBooking?.documents) {
+            setPreDocuments(currentBooking.documents?.filter((doc) => doc.type === 'pre'));
+            setPostDocuments(currentBooking.documents?.filter((doc) => doc.type === 'post'));
+          }
+      
+          if (currentBooking?.pre_job_complete) {
+            setPreJobComplete(currentBooking.pre_job_complete);
+          }
+      
+          if (currentBooking?.job_complete) {
+            setJobSignOff(currentBooking.job_complete);
+          }
         }
 
         setRefreshing(false);
@@ -77,7 +90,23 @@ const Tech = ({ route }) => {
 
         if (offlineBooking) {
           setBooking(JSON.parse(offlineBooking));
+
+          if (offlineBooking && offlineBooking?.documents) {
+            setPreDocuments(offlineBooking.documents?.filter((doc) => doc.type === 'pre'));
+            setPostDocuments(offlineBooking.documents?.filter((doc) => doc.type === 'post'));
+          }
+      
+          if (offlineBooking?.pre_job_complete) {
+            setPreJobComplete(offlineBooking.pre_job_complete);
+          }
+      
+          if (offlineBooking?.job_complete) {
+            setJobSignOff(offlineBooking.job_complete);
+          }
         }
+
+        setRefreshing(false);
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
 
@@ -92,24 +121,12 @@ const Tech = ({ route }) => {
         Toast.show(message, {
           duration: Toast.durations.LONG,
           textColor: 'red'
-        })
+        });
+
+        setRefreshing(false);
+        setIsLoading(false);
       }
 
-      if (currentBooking && currentBooking?.documents) {
-        setPreDocuments(currentBooking.documents?.filter((doc) => doc.type === 'pre'));
-        setPostDocuments(currentBooking.documents?.filter((doc) => doc.type === 'post'));
-      }
-
-      if (currentBooking?.pre_job_complete) {
-        setPreJobComplete(currentBooking.pre_job_complete);
-      }
-
-      if (currentBooking?.job_complete) {
-        setJobSignOff(currentBooking.job_complete);
-      }
-
-      setRefreshing(false);
-      setIsLoading(false);
     }
   }, [id, instance])
 
