@@ -34,6 +34,10 @@ const paymentType = [
     id: 'cheque',
     name: 'Cheque'
   },
+  {
+    id: 'account',
+    name: 'Account'
+  },
 ];
 
 const reasons = [
