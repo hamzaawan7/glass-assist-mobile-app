@@ -34,6 +34,10 @@ const paymentType = [
     id: 'cheque',
     name: 'Cheque'
   },
+  {
+    id: 'account',
+    name: 'Account'
+  },
 ];
 
 const reasons = [
@@ -663,3 +667,4 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   }
 });
+p
