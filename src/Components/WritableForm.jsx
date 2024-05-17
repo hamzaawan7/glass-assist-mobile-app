@@ -521,7 +521,7 @@ export default function ({
             }
           >
             {paymentType.map(stat => (
-              <Picker.Item label={stat.name} value={stat.id} />
+              <Picker.Item label={stat.name} value={stat.id} key={stat.id} />
             ))}
           </Picker>
 
@@ -592,7 +592,7 @@ export default function ({
             }
           >
             {reasons.map(stat => (
-              <Picker.Item label={stat.name} value={stat.id} />
+              <Picker.Item label={stat.name} value={stat.id} key={stat.id} />
             ))}
           </Picker>
 
