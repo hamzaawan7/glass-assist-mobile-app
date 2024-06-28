@@ -8,7 +8,7 @@ PODS:
   - EXImageLoader (4.6.0):
     - ExpoModulesCore
     - React-Core
-  - Expo (50.0.17):
+  - Expo (50.0.19):
     - ExpoModulesCore
   - ExpoBackgroundFetch (11.8.1):
     - ExpoModulesCore
@@ -1335,7 +1335,7 @@ SPEC CHECKSUMS:
   EXConstants: a5f6276e565d98f9eb4280f81241fc342d641590
   EXFont: f20669cb266ef48b004f1eb1f2b20db96cd1df9f
   EXImageLoader: 55080616b2fe9da19ef8c7f706afd9814e279b6b
-  Expo: 2cdb5916749a1509cf88114f1f510bd458630eb4
+  Expo: ad8bce0c0fc557cae703cc8dbce73d61a90ab5c5
   ExpoBackgroundFetch: 80d41ec15c6cce0bafb5d2326b8e85f42152eba7
   ExpoDocumentPicker: 70254802886e29a45d4ad25486e64b6fc9c8f0cc
   ExpoFileSystem: 74cc0fae916f9f044248433971dcfc8c3befd057
@@ -1346,7 +1346,7 @@ SPEC CHECKSUMS:
   FBLazyVector: f64d1e2ea739b4d8f7e4740cde18089cd97fe864
   FBReactNativeSpec: 9f2b8b243131565335437dba74923a8d3015e780
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   hermes-engine: 9cecf9953a681df7556b8cc9c74905de8f3293c0
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
@@ -1405,4 +1405,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c5ef7be3efceb843d30d34d0dc00a142b15323f0
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
