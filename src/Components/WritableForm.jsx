@@ -79,6 +79,7 @@ export default function ({
 
   const [preCheckNotes, setPreCheckNotes] = useState(booking?.pre_check_notes);
   const [preCName, setPreCName] = useState(booking?.pre_c_name);
+  const [preCMileage, setPreCMileage] = useState(booking?.pre_c_mileage);
   const [customerName, setCustomerName] = useState(booking?.c_name)
   const [type, setType] = useState(booking?.payment_type);
   const [techStatement, setTechStatement] = useState(booking?.technician_statement);
@@ -88,7 +89,6 @@ export default function ({
   const [jobNotCompleted, setJobNotCompleted] = useState(booking?.job_not_completed);
 
   const [uploading, setUploading] = useState(false);
-
   const ref = useRef();
   const ref2 = useRef();
 
@@ -177,6 +177,7 @@ export default function ({
     const payload = {
       pre_check_notes: preCheckNotes,
       pre_c_name: preCName,
+      pre_c_mileage: preCMileage,
       pre_job_complete: preJobComplete,
       job_complete: jobSignOff,
       c_name: customerName,
@@ -374,6 +375,13 @@ export default function ({
             onChangeText={setPreCName}
           />
 
+          <TextInput
+              label="Mileage"
+              style={styles.input}
+              value={preCMileage}
+              onChangeText={setPreCMileage}
+          />
+
           {booking?.signature ? (
             <Image
               source={{
@@ -511,6 +519,13 @@ export default function ({
             style={styles.input}
             value={customerName}
             onChangeText={setCustomerName}
+          />
+
+          <TextInput
+              label="Payment Method"
+              style={styles.input}
+              value={booking?.payment_method?.name}
+              disabled={true}
           />
 
           <Picker

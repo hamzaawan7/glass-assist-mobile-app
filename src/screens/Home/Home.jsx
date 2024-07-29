@@ -302,7 +302,7 @@ const Home = ({ navigation }) => {
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <MaterialCommunityIcons name="post-outline" size={14} color="black" />
 
-                        <Text style={{ marginLeft: 5 }}>{item?.job_location?.postcode}</Text>
+                        <Text style={{ fontWeight: 'bold', marginLeft: 5 }}>{item?.job_location?.postcode}</Text>
                       </View>
                     ) : null}
 
@@ -327,6 +327,14 @@ const Home = ({ navigation }) => {
 
                         <Text style={{ marginLeft: 5 }}>{item?.job_operation?.description}</Text>
                       </View>
+                    ) : null}
+
+                    {item?.payment_method ? (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                          <FontAwesome5 name="money-bill" size={14} color="red" />
+
+                          <Text style={{color: 'red', marginLeft: 5 }}>{item.payment_method?.name}</Text>
+                        </View>
                     ) : null}
 
                     {user ? (
