@@ -329,7 +329,7 @@ const Home = ({ navigation }) => {
                       </View>
                     ) : null}
 
-                    {item?.payment_method ? (
+                    {item?.payment_method?.name ? (
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                           <FontAwesome5 name="money-bill" size={14} color="red" />
 
