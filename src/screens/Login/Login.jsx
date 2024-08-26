@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, ActivityIndicator, Image } from "react-native";
+import {Text, View, ActivityIndicator, Image, Platform} from "react-native";
 
 import { Button, TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/FontAwesome";
@@ -13,6 +13,7 @@ import styles from "./style";
 
 import instance from "../../api/axios";
 import logs from '../../utils/logs';
+import DeviceInfo from "react-native-device-info";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -36,6 +37,9 @@ const Login = ({ navigation }) => {
     }
 
     const state = await NetInfo.fetch();
+    let deviceName = DeviceInfo.getDeviceNameSync();
+    let platform = Platform.OS;
+    let ipAddress = state?.details?.ipAddress;
 
     if (!state.isConnected) {
       Toast.show('Problem while connecting to internet', {
@@ -50,6 +54,9 @@ const Login = ({ navigation }) => {
       const res = await instance.post(`/api/login`, {
         email,
         password,
+        deviceName,
+        platform,
+        ipAddress,
       });
 
       const { data, success } = res.data;
