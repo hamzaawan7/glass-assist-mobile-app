@@ -326,14 +326,6 @@ const Home = ({navigation}) => {
                                             </View>
                                         ) : null}
 
-                                        {item?.job_operation?.description ? (
-                                            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-                                                <Feather name="list" size={14} color="black"/>
-
-                                                <Text style={{marginLeft: 5}}>{item?.job_operation?.description}</Text>
-                                            </View>
-                                        ) : null}
-
                                         {item?.payment_method?.name ? (
                                             <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
                                                 <FontAwesome5 name="money-bill" size={14} color="red"/>
@@ -345,12 +337,27 @@ const Home = ({navigation}) => {
                                             </View>
                                         ) : null}
 
+                                        {item?.job_operations && item.job_operations.length > 0 && (
+                                            <View>
+                                                {item.job_operations?.map((data, i) => (
+                                                    <View key={i}
+                                                          style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                                                        <Feather name="list" size={14} color="black"/>
+
+                                                        <Text style={{marginLeft: 7}}>
+                                                            {data?.name} - {data?.description}
+                                                        </Text>
+                                                    </View>
+                                                ))}
+                                            </View>
+                                        )}
+
                                         {item?.ww_lookups && item.ww_lookups.length > 0 && (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                <FontAwesome5 name="barcode" size={14} />
+                                            <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                                                <FontAwesome5 name="barcode" size={14}/>
                                                 <View>
                                                     {item.ww_lookups?.map((data, i) => (
-                                                        <Text key={i} style={{ marginLeft: 7 }}>
+                                                        <Text key={i} style={{marginLeft: 7}}>
                                                             {data?.resultEuroCode}
                                                         </Text>
                                                     ))}
