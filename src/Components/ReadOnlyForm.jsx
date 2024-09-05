@@ -178,6 +178,12 @@ export default function (booking) {
             description={booking?.sub_contractor?.name}
             descriptionNumberOfLines={10}
           />
+
+          <List.Item
+              title="Job Operations"
+              description={booking?.job_operations?.map(job_operation => job_operation.name + ' - ' + job_operation.description).join('\n')}
+              descriptionNumberOfLines={10}
+          />
         </List.Accordion>
       </List.Section>
     </View>
