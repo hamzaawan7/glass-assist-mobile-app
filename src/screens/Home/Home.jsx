@@ -198,6 +198,12 @@ const Home = ({navigation}) => {
         );
     };
 
+    const totalJobOperations = () => {
+        return bookings?.reduce((count, booking) => {
+            return count + (booking?.job_operations ? booking.job_operations.length : 0);
+        }, 0)
+    }
+
     if (isLoading) {
         return (
             <View style={[styles.container, styles.horizontal]}>
@@ -222,7 +228,7 @@ const Home = ({navigation}) => {
                 You are logged in as: {user?.first_name + ' ' + user?.surname}
             </Text>
 
-            <Text style={styles.jobText}>Total Jobs: {bookings.length}</Text>
+            <Text style={styles.jobText}>Total Jobs Operations: {totalJobOperations()}</Text>
 
             <Button onPress={handleLogout}>Logout</Button>
 
@@ -377,13 +383,19 @@ const Home = ({navigation}) => {
                                 )
                             }}
                             right={() => (
-                                <Text style={{
-                                    paddingHorizontal: 4,
-                                    fontWeight: 'bold',
-                                    color: getStatusColor(jobStatus?.name)
-                                }}>
-                                    {jobStatus?.name}
-                                </Text>
+                                <View style={{ display: 'flex', alignItems: 'center'}}>
+                                    <Text style={{
+                                        paddingHorizontal: 4,
+                                        fontWeight: 'bold',
+                                        color: getStatusColor(jobStatus?.name)
+                                    }}>
+                                        {jobStatus?.name}
+                                    </Text>
+                                    <Text style={{ padding: 2, backgroundColor: 'red', color: 'white', paddingHorizontal: 6, borderRadius: 5}}>
+                                        { item?.job_operations?.length}
+                                    </Text>
+                                </View>
+
                             )}
                         />
                     );
