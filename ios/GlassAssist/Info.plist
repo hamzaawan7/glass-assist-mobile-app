@@ -45,7 +45,7 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Need camera access for uploading images</string>
+	<string>We need camera access to allow you to capture and upload images directly within the app for sharing and documenting purposes.</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Need location access for updating nearby friends</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
