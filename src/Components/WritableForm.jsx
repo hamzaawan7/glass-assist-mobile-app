@@ -237,15 +237,24 @@ export default function ({
 
   const uploadFile = useCallback(async (uri, docType) => {
     setUploading(true);
+    // const filename = uri?.substring(uri.lastIndexOf('/') + 1)
+    // const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+    //
+    // const match = /\.(\w+)$/.exec(filename);
+    // const type = match ? `image/${match[1]}` : `image`;
+    //
+    // const formData = new FormData();
+    // formData.append('image', { uri: uploadUri, name: filename, type });
+    // formData.append('name', 'document');
+    // formData.append('type', docType);
 
-    const filename = uri.substring(uri.lastIndexOf('/') + 1)
-    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-
-    const match = /\.(\w+)$/.exec(filename);
-    const type = match ? `image/${match[1]}` : `image`;
+    const file = uri?.assets[0];
+    const filename = file?.name;
+    const uploadUri = Platform.OS === 'ios' ? file?.uri.replace('file://', '') : file?.uri;
+    const mimeType = file?.mimeType;
 
     const formData = new FormData();
-    formData.append('image', { uri: uploadUri, name: filename, type });
+    formData.append('image', { uri: uploadUri, name: filename, type: mimeType });
     formData.append('name', 'document');
     formData.append('type', docType);
 
@@ -260,7 +269,7 @@ export default function ({
         }
       );
 
-      const { data, success } = res.data;
+      const { data, success } = res?.data;
 
       if (success) {
         if (docType === 'pre') {
@@ -291,27 +300,36 @@ export default function ({
           <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', marginTop: 10 }}>
             <Button loading={uploading} disabled={uploading} onPress={async () => {
               try {
-                const filePermission = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+                let filePermissionGranted = false;
 
-                if (filePermission.granted) {
+                if (Platform.OS === 'android') {
+                  const filePermission = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+                  filePermissionGranted = filePermission.granted;
+                } else if (Platform.OS === 'ios') {
+                  filePermissionGranted = true;
+                }
+
+                if (filePermissionGranted) {
                   const document = await DocumentPicker.getDocumentAsync();
 
-                  if (document.type !== 'cancel') {
-                    await uploadFile(document.uri, 'pre')
+                  if (document?.canceled !== true) {
+                    await uploadFile(document, 'pre');
                   }
                 } else {
                   Toast.show('Please check media permission!', {
-                    textColor: 'red'
+                    textColor: 'red',
                   });
                 }
               } catch (error) {
-                console.log(error)
+                console.log(error);
 
                 Toast.show('Something went wrong!', {
-                  textColor: 'red'
+                  textColor: 'red',
                 });
               }
-            }}>Select Document</Button>
+            }}>
+              Select Document
+            </Button>
 
             <Button loading={uploading} disabled={uploading} onPress={async () => {
               if (await verifyPermission()) {
