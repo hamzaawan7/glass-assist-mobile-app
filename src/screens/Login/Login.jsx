@@ -50,7 +50,6 @@ const Login = ({ navigation }) => {
 
     setIsLoading(true);
 
-    // return;
     try {
       const res = await instance.post(`/api/login`, {
         email,
